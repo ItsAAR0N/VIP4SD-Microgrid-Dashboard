@@ -1,4 +1,4 @@
-# VIP4SD
+# Mthembanji Microgrid Dashboard VIP4SD
 
 Vertically Integrated Project for Sustainable Development 
 
