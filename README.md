@@ -34,7 +34,10 @@ Useful applications/brief code samples to utilize Pandas
 
 (Relevant videos and links to be added in due course time)
 
+**How to install Pandas/Plotly**:
 
+Pandas - https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
+Ploty - 
 
 
 
