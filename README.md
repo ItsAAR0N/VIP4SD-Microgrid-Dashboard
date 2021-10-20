@@ -21,8 +21,24 @@ https://ease-microgrid.herokuapp.com/demand
 
 **PRIMARY LIBRARIES USED:** 
 
-*PANDAS*: 
-Useful applications/brief code samples to utilize Pandas
+*Ploty*: (GREATEST PRIORITY)
+
+Useful applications/brief code samples to utilize Plotly:
+
+1.  https://plotly.com/python/interactive-html-export/ (Interactive HTML export)
+
+2.  https://plotly.com/python/plotly-express/ (Plotly Express - creating entire figures)
+  
+3.  https://dash.plotly.com/dash-html-components (Converts Python to HTML using Plotly called Dash)
+  
+4.  https://www.youtube.com/watch?v=UYGwgHhazMA (Introduction to Plotly Dash) -- **Important**
+
+5.  https://www.youtube.com/watch?v=Ma8tS4p27JI&list=PLH6mU1kedUy8fCzkTTJlwsf2EnV_UvOV- (Ploty Dash Complete tutorial) -- **Important**
+
+
+
+*PANDAS*: (Least priority)
+Useful applications/brief code samples to utilize Pandas:
 
 1.  https://www.youtube.com/watch?v=dcqPhpY7tWk (Applications of Python/helpful visualization of it)
 
@@ -30,14 +46,28 @@ Useful applications/brief code samples to utilize Pandas
 
 3.  https://www.youtube.com/watch?v=T11QYVfZoD0 (Sorting Data)
 
-*Ploty*: 
 
-(Relevant videos and links to be added in due course time)
 
 **How to install Pandas/Plotly**:
 
 Pandas - https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
-Ploty - 
+
+Ploty - https://plotly.com/python/getting-started/
+
+
+*Imported libraries used:* 
+
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
+import requests
+import pandas as pd
+import plotly.express as px
+from datetime import date
+import datetime
+import plotly.graph_objects as go
+import dash_bootstrap_components as dbc
 
 
 
