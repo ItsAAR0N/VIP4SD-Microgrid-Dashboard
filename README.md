@@ -35,6 +35,8 @@ Useful applications/brief code samples to utilize Plotly:
 
 5.  https://www.youtube.com/watch?v=Ma8tS4p27JI&list=PLH6mU1kedUy8fCzkTTJlwsf2EnV_UvOV- (Ploty Dash Complete tutorial) -- **Important**
 
+6. https://youtu.be/0mfIK8zxUds (Ploty Dash Complete Guide) -- **Important**
+
 
 
 *PANDAS*: (Least priority)
