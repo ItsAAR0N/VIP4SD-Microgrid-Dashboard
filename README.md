@@ -35,7 +35,9 @@ Useful applications/brief code samples to utilize Plotly:
 
 5.  https://www.youtube.com/watch?v=Ma8tS4p27JI&list=PLH6mU1kedUy8fCzkTTJlwsf2EnV_UvOV- (Ploty Dash Complete tutorial) -- **Important**
 
-6. https://youtu.be/0mfIK8zxUds (Ploty Dash Complete Guide) -- **Important**
+6. https://youtu.be/hSPmj7mK6ng (Introduction to Dash Plotly - Data Visualization in Python)
+
+7. https://youtu.be/0mfIK8zxUds (Ploty Dash Complete Guide) -- **Important**
 
 
 
@@ -55,6 +57,11 @@ Useful applications/brief code samples to utilize Pandas:
 Pandas - https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
 
 Ploty - https://plotly.com/python/getting-started/
+
+
+**Bootstrap themes and Cheatsheet:**
+https://www.bootstrapcdn.com/bootswatch/
+https://hackerthemes.com/bootstrap-ch...
 
 
 *Imported libraries used:* 
