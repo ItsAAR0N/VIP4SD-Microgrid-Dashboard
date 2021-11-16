@@ -61,7 +61,7 @@ Ploty - https://plotly.com/python/getting-started/
 
 **Bootstrap themes and Cheatsheet:**
 https://www.bootstrapcdn.com/bootswatch/
-https://hackerthemes.com/bootstrap-ch...
+https://hackerthemes.com/bootstrap-cheatsheet/
 
 
 *Imported libraries used:* 
