@@ -4,7 +4,7 @@
 Created on Thu Feb 11 15:53:26 2021
 
 @original author: heatherwaddell
-@pre existing author(s): aaronshek
+@pre existing author(s): aaronshek, christopher 
 """
 
 import dash
@@ -114,6 +114,7 @@ sidebar = html.Div(
                 dbc.NavLink("Demand", href="/demand", active="exact", external_link=True),
                 dbc.NavLink("Technical", href="/technical", active="exact", external_link=True),
                 dbc.NavLink("Social Impact", href="/social", active="exact", external_link=True),
+                dbc.NavLink("Maintenance", href="/maintenance", active="exact", external_link=True),
             ],
             vertical=True,
             pills=True,
@@ -131,6 +132,11 @@ app.layout = html.Div([
     sidebar,
     content
 ])
+# For YYYY-MM inputs
+if C_month < 10: # To suit YY/MM format since C_month does not include the 0 in front of singular months i.e 01,03
+    currentYYMM = '{0}-0{1}'.format(C_year,C_month) # C_ = Current 
+else:
+    currentYYMM = '{0}-{1}'.format(C_year,C_month) # Will update on a month by month basis
 
 @app.callback(
     Output("page-content", "children"),
@@ -183,7 +189,7 @@ def render_page_content(pathname):
                 html.Div(
                 children = html.H1("Technical Data"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),                          
                 html.Hr(),
-                html.P("Breif description goes here."),
+                html.P("Brief description goes here."),
                 html.Br(),
                 html.Hr(),
                 dcc.Tabs(id='technical_tabs_1', value='tab-1', children=[
@@ -203,7 +209,7 @@ def render_page_content(pathname):
                 html.Div(
                 children = html.H1("Social Impact Data"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),
                 html.Hr(),
-                html.P("Breif description goes here."),
+                html.P("Brief description goes here."),
                 html.Br(),
                 html.Hr(),
                 dcc.Tabs(id='social_tabs', value='tab-1', children=[
@@ -214,6 +220,21 @@ def render_page_content(pathname):
                 dcc.Tab(label='Women Empowerment', value='tab-5'),
                 ],),              
                 html.Div(id='social_tabs_content'),
+                ]
+    elif pathname == "/maintenance":
+        return [
+                html.Div(
+                children = html.H1("Maintenance scheduling"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),
+                html.Hr(),
+                html.P("Brief description goes here."),
+                html.Br(),
+                html.Hr(),
+                dcc.Tabs(id='maintenance_tabs', value='tab-1', children=[
+                dcc.Tab(label='Maintenance', value='tab-1'),
+                dcc.Tab(label='Comments', value='tab-2'),
+    
+                ],),              
+                html.Div(id='maintenance_content'),
                 ]
     return dbc.Jumbotron(
         [
@@ -292,6 +313,27 @@ def render_social_tabs(tab):
                 ])
         
 @app.callback(
+        Output('maintenance_content', 'children'),
+        Input('maintenance_tabs', 'value'))
+
+def render_maintenance_tabs(tab):
+    if tab == 'tab-1':
+        return html.Div([
+                html.Br(),
+                html.Hr(),
+                html.H2("Maintenance content to go here"),
+                # Stuff to go here
+                html.Hr(),
+                ])
+    elif tab == 'tab-2':
+        return html.Div([
+                html.Br(),
+                html.Hr(),
+                html.H2("Any additional remarks/comment to go here"),
+                # Stuff to go here
+                html.Hr(),
+                ])
+@app.callback(
         Output('technical_tabs_2_content', 'children'),
         Input('technical_tabs_2', 'value'))
 
@@ -331,16 +373,18 @@ def render_content(tab):
             html.Br(),
             html.Hr(),
             html.H2("Monthly Revenue for Given Year"),
-            html.H4("Please select a year from the dropdown: "),
+            html.H4("Please select a year from the dropdown: "), # New quality of life improvements
     
             dcc.Dropdown(id="slct_year",
                      options=[
                          {"label": "2020", "value": "2020"},
-                         {"label": "2021", "value": "2021"}],
+                         {"label": "2021", "value": "2021"},
+                        {"label": "2022", "value": "2022"},
+                         ],
                      placeholder="Select a year",
                      searchable = False,
                      multi=False,
-                     value=2020,
+                     value=C_year,
                      style={'width': "40%"}
                      ),
             html.Br(),
@@ -370,8 +414,9 @@ def render_content(tab):
                 id='my-date-picker-single',
                 min_date_allowed=date(2020, 6, 5),
                 max_date_allowed=date(C_year, C_month, C_day),
-                initial_visible_month=date(2020, 6, 6),
-                date=date(2020, 6, 6)
+                initial_visible_month=date(C_year, C_month, C_day),
+                date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
+                # more user friendly
             ),
             html.Br(),
             html.Br(),
@@ -392,7 +437,7 @@ def render_content(tab):
             
             html.H2("Microgrid Load Profile for Given Month"),
             html.H4("Please input the month which you would like to view (YYYY-MM): "),
-            dcc.Input(id="av_load_date_IP", type="text", value='2020-06', placeholder="YYYY-MM", debounce=True,style={'fontSize':16}),
+            dcc.Input(id="av_load_date_IP", type="text", value=currentYYMM, placeholder="YYYY-MM", debounce=True,style={'fontSize':16}),
             html.Br(),
             html.Br(),
             dcc.RadioItems(id = 'TorU',
@@ -416,7 +461,8 @@ def render_content(tab):
             html.Hr(),
             html.H2("Peak Loads for Given Month"),
             html.H4("Please input the month which you would like to view (YYYY-MM): "),
-            dcc.Input(id="peak_date_IP", type="text", value='2020-06', placeholder="YYYY-MM", debounce=True,style={'fontSize':16}),
+            
+            dcc.Input(id="peak_date_IP", type="text", value=currentYYMM, placeholder="YYYY-MM", debounce=True,style={'fontSize':16}), 
             dcc.Graph(id = 'my_peak_graph', figure={}),
             html.P("This chart displays the daily peak loads for the whole system throughout a given month."),
             html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day. This enables easy analysis of how much the peak load amount varies throughout the given month. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system throughout the month."),
@@ -538,8 +584,8 @@ def render_content(tab):
                 id='my-date-picker-single_2',
                 min_date_allowed=date(2020, 6, 5),
                 max_date_allowed=date(C_year, C_month, C_day),
-                initial_visible_month=date(2020, 6, 6),
-                date=date(2020, 6, 6)
+                initial_visible_month=date(C_year, C_month, C_day),
+                date=date(C_year, C_month, C_day)
             ),
             dcc.Graph(id = 'cust_on_day_graph', figure={}),
             html.Br(),
@@ -622,7 +668,7 @@ def render_content(tab):
                      ),
             html.Br(),
             html.H4("Please input the month which you would like to view (YYYY-MM): "),
-            dcc.Input(id='cus_av_month_usage_date_IP', type="text", value='2020-06', placeholder="YYYY-MM", debounce=True,style={'fontSize':16}),
+            dcc.Input(id='cus_av_month_usage_date_IP', type="text", value=currentYYMM, placeholder="YYYY-MM", debounce=True,style={'fontSize':16}),
             dcc.Graph(id = 'cust_month_average_graph', figure={}),    
             html.Br(),
             html.P("This chart displays the average daily usage of a single given customer over a given month. It does this by retrieving the data for each hour of each day of that given month. It then adds the usage amount for each hour for each day together (e.g., adds all the usage amount for 1AM for each day of the month together) and then divides that usage amount by the number of days in the month (this has been coded to take different months having different numbers of days and leap years into account). It does this for each hour and then displays the hourly data."),
