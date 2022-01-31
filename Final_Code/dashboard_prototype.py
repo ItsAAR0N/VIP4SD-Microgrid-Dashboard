@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+
 """
 Created on Thu Feb 11 15:53:26 2021
-
 @original author: heatherwaddell
 @pre existing author(s): aaron,chris,jack
 """
@@ -29,11 +29,12 @@ myobj = {'username': 'Christopher_Abi-Aad',
 x = requests.post(url, data = myobj)
 print(x.text) # Grab token via POST request 
 """
-
-power = pd.read_csv(r'C:/Users/aaron/Desktop/Power.csv')
-energy = pd.read_csv(r'C:/Users/aaron/Desktop/EnergyBalance.csv')
+#====================TECHINCAL=============================================
+#......................DATAFRAMES..............................................
+power = pd.read_csv(r'C:/Users/aaron/Desktop/Sma/Power.csv')
+energy = pd.read_csv(r'C:/Users/aaron/Desktop/Sma/EnergyBalance.csv')
 # ============================================================================================= WIP ================================================================================
-# Temporary
+# Temporary - TECHNICAL TAB
 def power_graph_PV(): # Ordinary functions are app callbacks not needed (for time being), non-differing inputs, excel values read in are constant
 
     fig = go.Figure()
@@ -112,6 +113,366 @@ url_ER = "https://api.steama.co/exchange-rates/?format=json"
 r = requests.get(url=url_ER, headers = header)
 s = r.content
 df_ER = pd.read_json(s)
+
+#====================SOCIAL IMPACT=============================================
+#......................DATAFRAMES..............................................
+# Health and Education #
+df_NoSchool = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Children_Not_School.xlsx')
+
+# Employment and Finance #
+df_Finances = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Monthly_Finances.xlsx')
+df_FinancialSecurity = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Financial_Security.xlsx')
+
+# Energy Access #
+df_EnergySources = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Electricity_Source.xlsx')
+df_EnergySatisfaction = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Energy_Satisfaction.xlsx')
+df_Appliances = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Household_Appliances.xlsx')
+df_LightSource = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Lighting_Source.xlsx')
+
+# Tarif and Services #
+df_CostSatisfaction = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Cost_Satisfaction.xlsx')
+df_PaymentMethod = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/PaymentMethod_Satisfaction.xlsx')
+df_satisfaction = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Recommendation_Likelihood.xlsx')
+
+# Women Empowerment #
+df_WomenFreetime = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Womens Freetime.xlsx')
+df_WomenIndependance = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Women_Independance.xlsx')
+df_WomenRespectHOME = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Respect_Household.xlsx')
+df_WomenRespectCOMM = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/Respect_Community.xlsx')
+df_HomeSecurity = pd.read_excel(r'C:/Users/aaron/Desktop/SocialImpactExcel/HouseholdSecurity.xlsx')
+#......................FUNCTIONS...............................................
+# Health and Education #
+def funct_NoSchool(df):
+    children   = df['Number of Children']
+    survey     = df['Survey']
+    fig_NoSchool = px.bar(
+        df,
+        title = 'Number of Children not in School',
+        x = survey,
+        y = children)
+    return fig_NoSchool
+
+# Employment and Finance #
+def funct_Finances(df):
+    finances  = df['Average Monthly (MWK)']
+    limit   = df['Range']
+    survey  = df['Survey']
+    fig_Income = px.line(
+        df,
+        title = 'Monthly Income (MWK)',
+        x = survey,
+        y = finances,
+        color = limit,)
+    return fig_Income
+
+def funct_FinancialSecurity(df):
+    survey     = df['Survey']
+    v_insecure = df['Very Insecure']
+    q_insecure = df['Quite Insecure']
+    neutral    = df['Neutral']
+    q_secure   = df['Quite Secure']
+    v_secure   = df['Very Secure']
+    fig_FinancialSecurity = px.bar(
+        df,
+        title = 'Household Financial Security',
+        x = survey,
+        y = [v_insecure,q_insecure,neutral,q_secure,v_secure],
+        color_discrete_map = {
+            'Very Insecure':'red',
+            'Quite Insecure':'orange',
+            'Neutral':'yellow',
+            'Quite Secure':'limegreen',
+            'Very Secure':'green'},
+        range_y = [0,55],)
+        
+    return fig_FinancialSecurity
+
+# Energy Access #
+def funct_EnergySources(df): 
+    sources    = df['Source']
+    households = df['Households']
+    survey     = df['Survey']
+
+    fig_sources = px.bar(
+        df_EnergySources,
+        title = 'Source of Electricity Used (Household)',
+        x = sources,
+        y = households,
+        animation_frame = survey,
+        animation_group = sources,
+        range_y = [0,55])
+    return fig_sources
+
+def funct_EnergySatisfaction(df):
+    survey  = df['Survey']
+    v_unhap = df['Very Unhappy']
+    q_unhap = df['Quite Unhappy']
+    neutral = df['Neutral']
+    q_hap   = df['Quite Happy']
+    v_hap   = df['Very Happy']
+
+    fig_EnergySatisfaction = px.bar(
+        df,
+        title = 'Enegrgy Access Satisfaction',
+        x = survey,
+        y = [v_unhap,q_unhap,neutral,q_hap,v_hap],
+        color_discrete_map = {
+            'Very Unhappy':'red',
+            'Quite Unhappy':'orange',
+            'Neutral':'yellow',
+            'Quite Happy':'limegreen',
+            'Very Happy':'green'},
+        range_y = [0,55],)
+    return fig_EnergySatisfaction
+
+def funct_Appliances(df): 
+    appliance    = df['Appliance']
+    households = df['Households']
+    survey     = df['Survey']
+
+    fig_app = px.bar(
+        df,
+        title = 'Appliances used in the Household',
+        x = appliance,
+        y = households,
+        animation_frame = survey,
+        animation_group = appliance,
+        range_y = [0,55])
+    return fig_app
+
+def funct_LightSource(df):
+    light_sources = df['Light Source']
+    households    = df['Households']
+    survey        = df['Survey']
+
+    fig_LightSources = px.bar(
+        df,
+        title = 'Light Sources used in the Household',
+        x = light_sources,
+        y = households,
+        animation_frame = survey,
+        animation_group = light_sources,
+        range_y = [0,55])
+    return fig_LightSources
+
+# Tarif and Services #
+def funct_CostSatisfaction(df):
+    survey  = df['Survey']
+    v_unhap = df['Very Unhappy']
+    q_unhap = df['Quite Unhappy']
+    neutral = df['Neutral']
+    q_hap   = df['Quite Happy']
+    v_hap   = df['Very Happy']
+    
+    fig_satisfaction = px.bar(
+        df,
+        title = 'Tariff Pricing Satisfaction',
+        x = survey,
+        y = [v_unhap,q_unhap,neutral,q_hap,v_hap],
+        color_discrete_map = {
+            'Very Unhappy':'red',
+            'Quite Unhappy':'orange',
+            'Neutral':'yellow',
+            'Quite Happy':'limegreen',
+            'Very Happy':'green'},
+        range_y = [0,55],)
+    return fig_satisfaction
+        
+def funct_PaymentMethod(df):
+    survey  = df['Survey']
+    v_unhap = df['Very Unhappy']
+    q_unhap = df['Quite Unhappy']
+    neutral = df['Neutral']
+    q_hap   = df['Quite Happy']
+    v_hap   = df['Very Happy']
+    
+    fig_PaymentMethod = px.bar(
+        df,
+        title = 'Payment Method Satisfaction',
+        x = survey,
+        y = [v_unhap,q_unhap,neutral,q_hap,v_hap],
+        color_discrete_map = {
+            'Very Unhappy':'red',
+            'Quite Unhappy':'orange',
+            'Neutral':'yellow',
+            'Quite Happy':'limegreen',
+            'Very Happy':'green'},
+        range_y = [0,55],)
+    return fig_PaymentMethod
+
+def funct_Recommendation(df):
+    survey  = df['Survey']
+    v_unhap = df['Very Unlikely']
+    q_unhap = df['Unlikely']
+    neutral = df['May Recommend']
+    q_hap   = df['Likely']
+    v_hap   = df['Very Likely']
+
+    fig_Recommendation = px.bar(
+        df,
+        title = 'Microgrid Recommendation Likelihood',
+        x = survey,
+        y = [v_unhap,q_unhap,neutral,q_hap,v_hap],
+        color_discrete_map = {
+            'Very Unlikely':'red',
+            'Unlikely':'orange',
+            'May Recommend':'yellow',
+            'Likely':'limegreen',
+            'Very Likely':'green'},
+        range_y = [0,55],)
+    return fig_Recommendation
+    
+# Women Empowerment #
+def funct_WomenFreetime(df):
+    similar   = df['Remained Similar']
+    increased = df['Somewhat Increased']
+    survey    = df['Survey']
+
+    fig_WomenFreetime = px.bar(
+        df,
+        title = "Ammount of Freetime (Number of Women)",
+        x = survey,
+        y = [increased, similar], 
+        range_y = [0,28])
+    
+    return fig_WomenFreetime
+
+def funct_WomenIndependance(df):
+    similar   = df['Remained Similar']
+    increased = df['Somewhat Increased']
+    survey    = df['Survey']
+
+    fig_WomenIndependance = px.bar(
+        df,
+        title = "Independance and Decision Making Power (Number of Females)",
+        x = survey,
+        y = [increased, similar], 
+        range_y = [0,28])
+    
+    return fig_WomenIndependance
+
+def funct_WomenRespectHOME(df):
+    similar   = df['Remained Similar']
+    increased = df['Somewhat Increased']
+    survey    = df['Survey']
+
+    fig_WomenRespectHOME = px.bar(
+        df,
+        title = "Respect Within the Household (Number of Females)",
+        x = survey,
+        y = [increased, similar], 
+        range_y = [0,28])
+    
+    return fig_WomenRespectHOME
+
+def funct_WomenRespectCOMM(df):
+    similar   = df['Remained Similar']
+    increased = df['Somewhat Increased']
+    survey    = df['Survey']
+
+    fig_WomenRespectCOMM = px.bar(
+        df,
+        title = "Respect Within the Community (Number of Females)",
+        x = survey,
+        y = [increased, similar], 
+        range_y = [0,28])
+    
+    return fig_WomenRespectCOMM
+
+def funct_HomeSecurity(df):
+    similar   = df['Remained Similar']
+    increased = df['Somewhat Increased']
+    survey    = df['Survey']
+
+    fig_HomeSecurity = px.bar(
+        df,
+        title = "Security in the Home (Number of Females)",
+        x = survey,
+        y = [increased, similar], 
+        range_y = [0,28])
+    
+    return fig_HomeSecurity
+#.......................FIGURES................................................
+# Health and Education #
+fig_NoSchool = funct_NoSchool(df_NoSchool)
+fig_NoSchool.update_layout(title = "Number of School Aged Children not in Education",
+               xaxis_title='Survey',
+               yaxis_title='Number of Children') 
+
+# Employment and Finance #
+fig_Finances = funct_Finances(df_Finances)
+fig_Finances.update_layout(title = "Average Monthly Income and Expenditure",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+
+fig_FinancialSecurity = funct_FinancialSecurity(df_FinancialSecurity)
+fig_FinancialSecurity.update_layout(title = "Household Financial Security",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+# Energy Access #
+fig_EnergySources = funct_EnergySources(df_EnergySources)
+fig_EnergySources.update_layout(title = "Household Source of Electricity Used",
+               xaxis_title='Source',
+               yaxis_title='Number of Households') 
+
+fig_EnergySatisfaction = funct_EnergySatisfaction(df_EnergySatisfaction)
+fig_EnergySatisfaction.update_layout(title = "Household Energy Access Satisfaction",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+
+fig_Appliances = funct_Appliances(df_Appliances)
+fig_Appliances.update_layout(title = "Appliances in the Household",
+               xaxis_title='Survey',
+               yaxis_title='Appliance') 
+
+fig_LightSources = funct_LightSource(df_LightSource)
+fig_LightSources.update_layout(title = "Household Light Source",
+               xaxis_title='Survey',
+               yaxis_title='Light Source') 
+
+# Tarif and Services #
+fig_CostSatisfaction = funct_CostSatisfaction(df_CostSatisfaction)
+fig_CostSatisfaction.update_layout(title = "Tariff Pricing Satisfaction",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+
+fig_PaymentMethod = funct_PaymentMethod(df_PaymentMethod)
+fig_PaymentMethod.update_layout(title = "Payment Method Satisfaction",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+
+fig_Recommendation = funct_Recommendation(df_satisfaction)
+fig_PaymentMethod.update_layout(title = "Microgrid Recommendation Liklihood",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+
+# Women Empowerment #
+fig_WomenFreetime = funct_WomenFreetime(df_WomenFreetime)
+fig_WomenFreetime.update_layout(title = "Ammount of Free Time",
+               xaxis_title='Survey',
+               yaxis_title='Number of Females') 
+
+fig_WomenIndependance = funct_WomenIndependance(df_WomenIndependance)
+fig_WomenIndependance.update_layout(title = "Independance and Decision Making Power",
+               xaxis_title='Survey',
+               yaxis_title='Number of Females') 
+
+fig_WomenRespectHOME = funct_WomenRespectHOME(df_WomenRespectHOME)
+fig_WomenRespectHOME.update_layout(title = "Respect Within the HOUSEHOLD",
+               xaxis_title='Survey',
+               yaxis_title='Number of Females') 
+
+fig_WomenRespectCOMM = funct_WomenRespectCOMM(df_WomenRespectCOMM)
+fig_WomenRespectCOMM.update_layout(title = "Respect within the COMMUNITY",
+               xaxis_title='Survey',
+               yaxis_title='Number of Females') 
+
+fig_HomeSecurity = funct_HomeSecurity(df_HomeSecurity)
+fig_HomeSecurity.update_layout(title = "Security in the Home",
+               xaxis_title='Survey',
+               yaxis_title='Number of Females') 
+#==============================================================================
+
 
 for index in range(len(df_ER['rate'])):
     if(df_ER['source'][index]=='MWK' and df_ER['target'][index]=='USD'):
@@ -303,7 +664,7 @@ def render_page_content(pathname):
                 html.Div(
                 children = html.H1("Social Impact Data"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),
                 html.Hr(),
-                html.P("Brief description goes here."),
+                html.P("Social Impact data is the measure of how a product or service changes the lives of the people and community that uses it. The social impact data of the microgrid has been broken down into five categories shown by the tabs below. "),
                 html.Br(),
                 html.Hr(),
                 dcc.Tabs(id='social_tabs', value='tab-1', children=[
@@ -350,7 +711,7 @@ def render_tech_tabs_1(tab): # =================================================
                 html.H2("Power of PV system"),
                 dcc.Graph(id = 'holder_graph_1', figure = power_graph_PV()),
                 html.P("This chart displays the current power from the PV (PhotoVoltaic) solar systems."),
-                html.P("This is a key data indicator to track as it displays the maximas and minimas of the amount of power from the PV systems, allowing for one to visualize how much stress/load the system is under during peak times (around morning time), also it is interesting to inspect/see that from 23rd to 25th, the graph was display anomalous data, this is due to the fact that storm Ana struck the surrounding areas, hence the data."),
+                html.P("This is a key data indicator to track as it displays the maximas and minimas of the amount of power from the PV systems, allowing for one to visualize how much stress/load the system is under during peak times (around morning time), also it is interesting to inspect/see that from 23rd to 25th, the graph was displaying anomalous data, this is due to the fact that storm Ana struck the surrounding areas, hence the data."),
                 html.Hr(),
                 ])
     elif tab == 'tab-2':
@@ -364,51 +725,101 @@ def render_tech_tabs_1(tab): # =================================================
                 html.Hr(),
                 ])
         
+#============================SOCIAL IMPACT TABS================================
 @app.callback(
         Output('social_tabs_content', 'children'),
         Input('social_tabs', 'value'))
-
 def render_social_tabs(tab):
     if tab == 'tab-1':
         return html.Div([
                 html.Br(),
                 html.Hr(),
                 html.H2("Health and Education Content To Go Here"),
-                dcc.Graph(id='holder_graph_1', figure=holder_fig),
+                dcc.Graph(id='H&E_graph_1', figure=fig_NoSchool),
                 html.Hr(),
                 ])
     elif tab == 'tab-2':
         return html.Div([
                 html.Br(),
                 html.Hr(),
-                html.H2("Employment and Finance Content To Go Here"),
-                dcc.Graph(id='holder_graph_1', figure=holder_fig),
+                html.H2("Employment and Finance Data"),
+                
+                html.Br(),
+                html.Div(         
+                    html.Dialog("Monitoring the Microgrid's social impact on finance and employment allows us to see if any economic development is happening."),
+                    style={'fontSize':16}),
+                
+                dcc.Graph(id='E&P_graph_1', figure=fig_Finances),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='E&P_graph_2', figure=fig_FinancialSecurity),
                 html.Hr(),
                 ])
     elif tab == 'tab-3':
         return html.Div([
                 html.Br(),
                 html.Hr(),
-                html.H2("Energy Access Content To Go Here"),
-                dcc.Graph(id='holder_graph_1', figure=holder_fig),
+                html.H2("Energy Access Data"),
+                dcc.Graph(id='Energy_Access_Graph_1', figure=fig_EnergySources),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Energy_Access_Graph_2', figure=fig_EnergySatisfaction),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Energy_Access_Graph_3', figure=fig_Appliances),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Energy_Access_Graph_4', figure=fig_LightSources ),
                 html.Hr(),
                 ])
     elif tab == 'tab-4':
         return html.Div([
                 html.Br(),
                 html.Hr(),
-                html.H2("Tariff and Service Content To Go Here"),
-                dcc.Graph(id='holder_graph_1', figure=holder_fig),
+                html.H2("Tariff and Service Data"),
+                
+                html.Br(),
+                html.Div(         
+                    html.Dialog("Tariff and Service satisfaction is an important indicator to track to ensure the continued success of the project. This data allows the Microgrid team to make informed decisions regarding the pricing and service offered to the community. These questions were asked to the 55 houshlods connected to the Microgrid."),
+                    style={'fontSize':16}),
+                
+                dcc.Graph(id='Tariff_Graph_1', figure=fig_CostSatisfaction),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Tariff_Graph_2', figure=fig_PaymentMethod ),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Tariff_Graph_3', figure=fig_Recommendation ),
                 html.Hr(),
                 ])
     elif tab == 'tab-5':
         return html.Div([
                 html.Br(),
                 html.Hr(),
-                html.H2("Women Empowerment Content To Go Here"),
-                dcc.Graph(id='holder_graph_1', figure=holder_fig),
+                html.H2("Women Empowerment Data"),
+                
+                html.Br(),
+                html.Div(         
+                    html.Dialog("The Social Impact of the microgrid in terms of Women Empowerment is how the Solar Microgrid has changed the women, who use its, lives. The 28 women in Mthembanji who are connected to the Microgrid were asked a series of questions to see if their situation has changed since its installation."),
+                    style={'fontSize':16}),
+                
+                dcc.Graph(id='Women_Power_Graph_1', figure=fig_WomenFreetime),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Women_Power_Graph_2', figure=fig_WomenIndependance),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Women_Power_Graph_3', figure=fig_WomenRespectHOME),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Women_Power_Graph_4', figure=fig_WomenRespectCOMM),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Women_Power_Graph_5', figure=fig_HomeSecurity),
                 html.Hr(),
                 ])
+    
+#==============================================================================
         
 @app.callback(
         Output('maintenance_content', 'children'),
@@ -462,6 +873,7 @@ def render_tech_tabs_2(tab):
                 html.Br(),
                 html.Hr(),
                 html.H2("Potential Energy Yield Graph To Go Here"), # ======================================================================================================================= WIP ======================================================= #
+                html.P("This section is currently work in progress."),
                 dcc.Graph(id='holder_graph_1', figure=holder_fig),
                 html.Hr(),
                 ])
@@ -2206,4 +2618,3 @@ if __name__ == '__main__':
     #fig = px.bar(dff, x="Month", y="Usage", title = "Load profile")
     
 #    return fig F
-
