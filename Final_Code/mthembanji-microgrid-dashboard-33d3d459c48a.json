@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "mthembanji-microgrid-dashboard",
+  "private_key_id": "33d3d459c48afd1aaebcb4bac73a75f7dcae8967",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCqahx4NrY9LY+O\nmQ/3Egv3mA/nBs1IxGJyATNedwsLCiFJcm2jcZgapYcQKNCjv1KLiYRtaRttodLK\ntEG6cheJLKbyecLlPX6NJcb4BNr49+Fg89nGCNmW1WTf4lsFE0Z1GOuWcFgYt1v7\nKx3gnYzxNMU5s3MR34swVR/GT1iP8pGbNoEOKRh5nu3k1v1/89+si8eWJFGvbqgZ\ndq8OK/g1T4IcMoGLpwgcDJSSlRUc+uOhMFrCErxaV8wf4GYrgkjVjFIMrPqxerrs\nsPrGXiMvoJjb116NJczIDpHEjIJJfKg00t47FoJBrLQ2JrgKCWzmMngeklGcVkQb\nf9ldOBcnAgMBAAECggEALJtC4XqcwC3FVnOdOLRqGoCcpQHkSShShnnm+tKZOuYH\naYTAyxgIUu1CCcpNNpd1YV35InRxQASsOu/tBoMnwvnDp1OU3tF2Zzbcun323VVx\nEqIxvkMBxZgM5AeJgK4Xcr43qHS2sp2IP5n9I5bJ1jdUarKcq7CCa//UJeIOEftj\n7WSNUq+yUh4UBPxW0/TSeDFMAwm4YTzZYdn1WxXoM39x6bWtr4aUcU+e9l5DDCfC\nVdK2hGIt0Czn+yP3tMtTCPjeV8nx6pdbbu9baRdFUCsBYq9gMwslKeUXD+3O2wqg\np/WGq+SkqDhxmuZvMZCDyGxhWFeFZME7ahfMq7Oe7QKBgQDqSUplpDIg2GHjO6s3\nVm2X1CYjEO8rMqirYDXJHi+V3dGLF/cOCbsLc6XCW+ROrXIulgDqxcQuG/pZKNCV\n4iFD2nFyA2dkUaa4p8I20z2QsUTJM4CDoy5ddlwdVdktM+MZW/zIQyvTPQN2aVlm\nJkVtK0PMBtUztmYQ/oNvofBNEwKBgQC6NWOyyKjaCjeZn8WALtPWbcRODsvJTNRG\nPWLJIpBrAY/lfpBUFWszQYcS1MxoHWZNSfdrC2f9Qmu+QH38hcXQM1gwmq3eHffP\nKvoWRFBur7CiQiQtfDVwCOualVLdU/ToS52GYtY1UlHmBiqNGPa10vD5TzuOuncS\nsA7xlbq0HQKBgQCTWy2T6EYvKmnHBkyWLaIYkLK783a6cM5tm8G4kWfUlwOovJYD\nGlOuzDpBmJJseeMLMgW5pFHTvn0jfuxSmTva9ZXM5B8vlbuLANjCqvJaA2UEN4Rp\nR0VuO3eMa+aA69W2qYjAXJ8/6Ww4GeLEwOWB2Gh39wQ51ksz/SCmIfCGSQKBgQCs\n1DkBC7WNCsaoU97gJpaAA8mcGaeT4zdzKi6yON6KMxz4CQy0vlyNaliQZeqDCCaX\nvfti42dVbXzLTNiitRbxM3a7RhXyfyYuptkQKb/tvCvZrkId5ZdDsUPcapRK0U4S\n/Xvr63iebRWOxlJgO7dg87St8Zh51SAHvFliaXKtEQKBgHj3k7+MEpERbE7OoUcJ\nEICbge+2mwJXPTvSJN2Qgst9O+hdWSSNZdUUOccYh8Qfve4HAhiOR1GDNU3ZXCzx\nId/cURDZke1KCrgBlwviPdU5J1O6Xl7Wb3UIdV10RjoPlNVILJzGAOl+VnVrpflW\n9PLI7JYVHHp5p5HCtoBBNwFR\n-----END PRIVATE KEY-----\n",
+  "client_email": "dashboardcloudstorage@mthembanji-microgrid-dashboard.iam.gserviceaccount.com",
+  "client_id": "105553652118250047086",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dashboardcloudstorage%40mthembanji-microgrid-dashboard.iam.gserviceaccount.com"
+}
