@@ -1387,7 +1387,7 @@ def update_cust_month_average_graph(date_value, cust_name):
             fig.add_trace(go.Scatter(x=x_dont_care, y=y_dont_care,
                                     mode='lines+markers',
                                     ))
-            fig.update_layout(title = "There are no meter readings for " + first_name + " " + surname + " for " + M + " " + str(date[0:4]),
+            fig.update_layout(title = "There are no meter readings for this customer on "  + M + " " + str(date[0:4]),
                               )
             return fig
     
@@ -1435,7 +1435,7 @@ def update_cust_month_average_graph(date_value, cust_name):
                                     mode='lines+markers',
                                     ))
                 
-            fig.update_layout(title = first_name + " " + surname + " Average Daily Load Profile Usage for " + M + " " + str(date[0:4]),
+            fig.update_layout(title = "An Individual Customer's Average Daily Load Profile Usage for " + M + " " + str(date[0:4]),
                                xaxis_title='Time',
                                yaxis_title='Usage Amount (kWh)',
                                yaxis_range=[-0.01,max(usage)+0.01])
@@ -1515,7 +1515,7 @@ def update_cust_on_day_graph(date_value, cust_name):
         fig.add_trace(go.Scatter(x=x_dont_care, y=y_dont_care,
                                 mode='lines+markers',
                                 ))
-        fig.update_layout(title = "There are no meter readings for " + first_name + " " + surname + " on " + str(date),
+        fig.update_layout(title = "There are no meter readings for this customer on" + str(date),
                           )
         return fig
     else:
@@ -1534,7 +1534,7 @@ def update_cust_on_day_graph(date_value, cust_name):
                             mode='lines+markers',
                             ))
         
-    fig.update_layout(title = first_name + " " + surname + " Usage on " + date,
+    fig.update_layout(title ="An Individual Customer's usage on " + date,
                        xaxis_title='Time',
                        yaxis_title='Usage Amount (kWh)',
                        yaxis_range=[-0.01,max(usage_amount)+0.01])
