@@ -907,7 +907,7 @@ def render_content(tab):
                      style={'width': "40%"}
                      ),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user',
+            dcc.RadioItems(id = 'slct_user_1',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -927,7 +927,7 @@ def render_content(tab):
                 value=1,
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),]),
-            dcc.Graph(id='my_graph', figure={}),
+            dcc.Graph(id='my_graph_1', figure={}),
             html.P("This bar chart displays either the total monthly revenue generated across a given year or the ARPU (average revenue per user) across a given year. You may also choose a user category to view data specific to that category. (Residential / Businesses / Institutions). "),
             html.P("This is useful data to analyse as it provides information of how much monthly revenue the microgrid generated throughout the year or how much revenue the average customer generated. This data could be useful for developing a business plan as it enables evaluation of how much revenue the microgrid generates and how much an average customer generates. This format is also particularly useful as it enables easy visual analysis of how the total monthly revenue and ARPU vary month to month or seasonally throughout a given year, hence enabling trends to be established and analysed."),
             html.Br(),
@@ -949,7 +949,7 @@ def render_content(tab):
             ),
             html.Br(),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user',
+            dcc.RadioItems(id = 'slct_user_2',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -960,7 +960,7 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
             html.Br(),
-            dcc.RadioItems(id = 'TorU_3',
+            dcc.RadioItems(id = 'TorU_2',
                 options=[
                     {'label': 'Total', 'value': 1},
                     {'label': 'Average', 'value': 2},
@@ -990,7 +990,7 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user',
+            dcc.RadioItems(id = 'slct_user3',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -1024,7 +1024,7 @@ def render_content(tab):
                      style={'width': "40%"}
                      ),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user',
+            dcc.RadioItems(id = 'slct_user_4',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -1035,7 +1035,7 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
             html.Br(),
-            dcc.RadioItems(id = 'TorU_3',
+            dcc.RadioItems(id = 'TorU_4',
                 options=[
                     {'label': 'Total', 'value': 1},
                     {'label': 'Average', 'value': 2},
@@ -1859,9 +1859,9 @@ def update_peak_graph(IP):
             return fig
 
 @app.callback(
-    Output(component_id='my_graph', component_property='figure'),
+    Output(component_id='my_graph_1', component_property='figure'),
     [Input(component_id='slct_year', component_property='value'),
-     Input('slct_user','value'),
+     Input('slct_user_1','value'),
      Input('TorA','value')])
 
 def update_graph(option_slctd, bttn1, bttn2):
@@ -2118,7 +2118,7 @@ def update_graph(option_slctd, bttn1, bttn2):
 @app.callback(
     Output(component_id='my_graph_2', component_property='figure'),
     [Input(component_id='my-date-picker-single', component_property='date'),
-     Input('slct_user','value'),Input('TorU_3','value')])
+     Input('slct_user_2','value'),Input('TorU_2','value')])
 
 def update_output(date_value, bttn1, bttn2):
     
@@ -2357,7 +2357,7 @@ def update_output(date_value, bttn1, bttn2):
 @app.callback(
     Output(component_id='my_graph_4', component_property='figure'),
     [Input(component_id='slct_year', component_property='value'),
-     Input('slct_user','value'),Input('TorU_3', 'value')])
+     Input('slct_user_4','value'),Input('TorU_4', 'value')])
 
 def update_output_2(date_value,bttn1,bttn2):
     
