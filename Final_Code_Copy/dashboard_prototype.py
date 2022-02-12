@@ -166,7 +166,7 @@ def funct_Finances(df):
     survey  = df['Survey']
     fig_Income = px.line(
         df,
-        title = 'Monthly Income (MWK)',
+        title = 'Monthly Income and Expenditure (MWK)',
         x = survey,
         y = finances,
         color = limit,)
@@ -410,7 +410,7 @@ fig_NoSchool.update_layout(title = "Number of School Aged Children not in Educat
 fig_Finances = funct_Finances(df_Finances)
 fig_Finances.update_layout(title = "Average Monthly Income and Expenditure",
                xaxis_title='Survey',
-               yaxis_title='Number of Households') 
+               yaxis_title='Monthly Income and Expenditure (MWK)') 
 
 fig_FinancialSecurity = funct_FinancialSecurity(df_FinancialSecurity)
 fig_FinancialSecurity.update_layout(title = "Household Financial Security",
@@ -437,7 +437,7 @@ fig_LightSources.update_layout(title = "Household Light Source",
                xaxis_title='Survey',
                yaxis_title='Light Source') 
 
-# Tarif and Services #
+# Tariff and Services #
 fig_CostSatisfaction = funct_CostSatisfaction(df_CostSatisfaction)
 fig_CostSatisfaction.update_layout(title = "Tariff Pricing Satisfaction",
                xaxis_title='Survey',
@@ -449,7 +449,7 @@ fig_PaymentMethod.update_layout(title = "Payment Method Satisfaction",
                yaxis_title='Number of Households') 
 
 fig_Recommendation = funct_Recommendation(df_satisfaction)
-fig_PaymentMethod.update_layout(title = "Microgrid Recommendation Liklihood",
+fig_Recommendation.update_layout(title = "Microgrid Recommendation Liklihood",
                xaxis_title='Survey',
                yaxis_title='Number of Households') 
 
@@ -675,10 +675,10 @@ def render_page_content(pathname):
                 html.Br(),
                 html.Hr(),
                 dcc.Tabs(id='social_tabs', value='tab-1', children=[
-                dcc.Tab(label='Health and Education', value='tab-1'),
-                dcc.Tab(label='Employment and Finance', value='tab-2'),
-                dcc.Tab(label='Energy Access', value='tab-3'),
-                dcc.Tab(label='Tariff and Service', value='tab-4'),
+                dcc.Tab(label='Energy Access', value='tab-1'), 
+                dcc.Tab(label='Tariff and Service', value='tab-2'),                    
+                dcc.Tab(label='Health and Education', value='tab-3'),
+                dcc.Tab(label='Employment and Finance', value='tab-4'),
                 dcc.Tab(label='Women Empowerment', value='tab-5'),
                 ],),              
                 html.Div(id='social_tabs_content'),
@@ -741,11 +741,54 @@ def render_social_tabs(tab):
         return html.Div([
                 html.Br(),
                 html.Hr(),
+                html.H2("Energy Access Data"),
+            
+                html.Br(),
+                html.Div(         
+                    html.Dialog("Tracking the community's Access to Energy, is the most important Social Impact indicator to track. This data allows microgrid developers to understand the true impact energy access has on developing communities."),
+                    style={'fontSize':16}),
+               
+                dcc.Graph(id='Energy_Access_Graph_1', figure=fig_EnergySatisfaction),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Energy_Access_Graph_2', figure=fig_EnergySources),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Energy_Access_Graph_3', figure=fig_Appliances),
+                html.Hr(),
+                html.Br(),
+                dcc.Graph(id='Energy_Access_Graph_4', figure=fig_LightSources ),
+                html.Hr(),
+                ])   
+    elif tab == 'tab-2':
+       return html.Div([
+               html.Br(),
+               html.Hr(),
+               html.H2("Tariff and Service Data"),
+                
+               html.Br(),
+               html.Div(         
+                   html.Dialog("Tariff and Service satisfaction is an important indicator to track to ensure the continued success of the project. This data allows the Microgrid team to make informed decisions regarding the pricing and service offered to the community. These questions were asked to the 55 houshlods connected to the Microgrid."),
+                   style={'fontSize':16}),
+                
+               dcc.Graph(id='Tariff_Graph_1', figure=fig_CostSatisfaction),
+               html.Hr(),
+               html.Br(),
+               dcc.Graph(id='Tariff_Graph_2', figure=fig_PaymentMethod ),
+               html.Hr(),
+               html.Br(),
+               dcc.Graph(id='Tariff_Graph_3', figure=fig_Recommendation ),
+               html.Hr(),
+               ])
+    elif tab == 'tab-3':
+        return html.Div([
+                html.Br(),
+                html.Hr(),
                 html.H2("Health and Education Content To Go Here"),
                 dcc.Graph(id='H&E_graph_1', figure=fig_NoSchool),
                 html.Hr(),
                 ])
-    elif tab == 'tab-2':
+    elif tab == 'tab-4':
         return html.Div([
                 html.Br(),
                 html.Hr(),
@@ -760,43 +803,6 @@ def render_social_tabs(tab):
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='E&P_graph_2', figure=fig_FinancialSecurity),
-                html.Hr(),
-                ])
-    elif tab == 'tab-3':
-        return html.Div([
-                html.Br(),
-                html.Hr(),
-                html.H2("Energy Access Data"),
-                dcc.Graph(id='Energy_Access_Graph_1', figure=fig_EnergySources),
-                html.Hr(),
-                html.Br(),
-                dcc.Graph(id='Energy_Access_Graph_2', figure=fig_EnergySatisfaction),
-                html.Hr(),
-                html.Br(),
-                dcc.Graph(id='Energy_Access_Graph_3', figure=fig_Appliances),
-                html.Hr(),
-                html.Br(),
-                dcc.Graph(id='Energy_Access_Graph_4', figure=fig_LightSources ),
-                html.Hr(),
-                ])
-    elif tab == 'tab-4':
-        return html.Div([
-                html.Br(),
-                html.Hr(),
-                html.H2("Tariff and Service Data"),
-                
-                html.Br(),
-                html.Div(         
-                    html.Dialog("Tariff and Service satisfaction is an important indicator to track to ensure the continued success of the project. This data allows the Microgrid team to make informed decisions regarding the pricing and service offered to the community. These questions were asked to the 55 houshlods connected to the Microgrid."),
-                    style={'fontSize':16}),
-                
-                dcc.Graph(id='Tariff_Graph_1', figure=fig_CostSatisfaction),
-                html.Hr(),
-                html.Br(),
-                dcc.Graph(id='Tariff_Graph_2', figure=fig_PaymentMethod ),
-                html.Hr(),
-                html.Br(),
-                dcc.Graph(id='Tariff_Graph_3', figure=fig_Recommendation ),
                 html.Hr(),
                 ])
     elif tab == 'tab-5':
