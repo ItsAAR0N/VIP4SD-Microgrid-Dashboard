@@ -262,7 +262,7 @@ def funct_LightSource(df):
         range_y = [0,55])
     return fig_LightSources
 
-# Tarif and Services #
+# Tariff and Services #
 def funct_CostSatisfaction(df):
     survey  = df['Survey']
     v_unhap = df['Very Unhappy']
@@ -332,70 +332,75 @@ def funct_Recommendation(df):
 # Women Empowerment #
 def funct_WomenFreetime(df):
     similar   = df['Remained Similar']
-    increased = df['Somewhat Increased']
+    sw_increased = df['Somewhat Increased']
+    vm_increased = df['Very Much Increased']
     survey    = df['Survey']
 
     fig_WomenFreetime = px.bar(
         df,
         title = "Ammount of Freetime (Number of Women)",
         x = survey,
-        y = [increased, similar], 
+        y = [vm_increased,sw_increased, similar], 
         range_y = [0,28])
     
     return fig_WomenFreetime
 
 def funct_WomenIndependance(df):
     similar   = df['Remained Similar']
-    increased = df['Somewhat Increased']
+    sw_increased = df['Somewhat Increased']
+    vm_increased = df['Very Much Increased']
     survey    = df['Survey']
 
     fig_WomenIndependance = px.bar(
         df,
         title = "Independance and Decision Making Power (Number of Females)",
         x = survey,
-        y = [increased, similar], 
+        y = [vm_increased,sw_increased, similar], 
         range_y = [0,28])
     
     return fig_WomenIndependance
 
 def funct_WomenRespectHOME(df):
     similar   = df['Remained Similar']
-    increased = df['Somewhat Increased']
+    sw_increased = df['Somewhat Increased']
+    vm_increased = df['Very Much Increased']
     survey    = df['Survey']
 
     fig_WomenRespectHOME = px.bar(
         df,
         title = "Respect Within the Household (Number of Females)",
         x = survey,
-        y = [increased, similar], 
+        y = [vm_increased,sw_increased, similar], 
         range_y = [0,28])
     
     return fig_WomenRespectHOME
 
 def funct_WomenRespectCOMM(df):
     similar   = df['Remained Similar']
-    increased = df['Somewhat Increased']
+    sw_increased = df['Somewhat Increased']
+    vm_increased = df['Very Much Increased']   
     survey    = df['Survey']
 
     fig_WomenRespectCOMM = px.bar(
         df,
         title = "Respect Within the Community (Number of Females)",
         x = survey,
-        y = [increased, similar], 
+        y = [vm_increased,sw_increased, similar], 
         range_y = [0,28])
     
     return fig_WomenRespectCOMM
 
 def funct_HomeSecurity(df):
     similar   = df['Remained Similar']
-    increased = df['Somewhat Increased']
+    sw_increased = df['Somewhat Increased']
+    vm_increased = df['Very Much Increased']
     survey    = df['Survey']
 
     fig_HomeSecurity = px.bar(
         df,
         title = "Security in the Home (Number of Females)",
         x = survey,
-        y = [increased, similar], 
+        y = [vm_increased,sw_increased, similar], 
         range_y = [0,28])
     
     return fig_HomeSecurity
