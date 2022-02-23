@@ -10,6 +10,7 @@ Created on Thu Feb 11 15:53:26 2021
 import os # find current file directory
 import datetime as datetime
 import dash
+from dash import State
 import dash_core_components as dcc # from dash import dcc 
 import dash_html_components as html # from dash import html
 from dash.dependencies import Input, Output
@@ -20,9 +21,9 @@ import plotly.express as px
 from datetime import date
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
-
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.SPACELAB],suppress_callback_exceptions=True) 
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, dbc.icons.BOOTSTRAP],suppress_callback_exceptions=True) 
 server = app.server
+# CERULEAN, COSMO, CYBORG, DARKLY, FLATLY, JOURNAL, LITERA, LUMEN, LUX, MATERIA, MINTY, MORPH, PULSE, QUARTZ, SANDSTONE, SIMPLEX, SKETCHY, SLATE, SOLAR, SPACELAB, SUPERHERO, UNITED, VAPOR, YETI, ZEPHYR.
 
 session=requests.Session()
 
@@ -522,6 +523,7 @@ sidebar = html.Div(
                 dbc.NavLink("Technical", href="/technical", active="exact", external_link=True),
                 dbc.NavLink("Social Impact", href="/social", active="exact", external_link=True),
                 dbc.NavLink("Maintenance", href="/maintenance", active="exact", external_link=True),
+                dbc.NavLink("Learn More", href = "https://www.sma-sunny.com/en/malawi-village-powered-with-microgrid/")
             ],
             vertical=True,
             pills=True,
@@ -598,13 +600,11 @@ def render_page_content(pathname):
                 html.Br(),
                 dcc.Tabs(id='tabs-example', value='tab-1', children=[
                 dcc.Tab(label='Revenue Data', value='tab-1'),
-                dcc.Tab(label='Microgrid Load Profiles', value='tab-2'),
-                dcc.Tab(label='Peak Load Data', value='tab-3'),
-                dcc.Tab(label='Connection Status', value='tab-4'),
-                dcc.Tab(label='Individual Customer Data', value='tab-5'),
-                dcc.Tab(label='Hourly Usage', value='tab-6'),
-                dcc.Tab(label='Monthly Usage', value='tab-7'),
-                dcc.Tab(label='Monthly Revenue', value='tab-8'),
+                dcc.Tab(label='Monthly Usage', value = 'tab-2'),
+                dcc.Tab(label='Load Profiles', value='tab-3'),
+                dcc.Tab(label='Peak Load Data', value='tab-4'),
+                dcc.Tab(label='Connection Status', value='tab-5'),
+                dcc.Tab(label='Individual Customer Data', value='tab-6')
                 ],),
                 html.Div(id='tabs-example-content'),
                 ]
@@ -922,13 +922,40 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),]),
             dcc.Graph(id='my_graph_1', figure={}),
-            html.P("This bar chart displays either the total monthly revenue generated across a given year or the ARPU (average revenue per user) across a given year. You may also choose a user category to view data specific to that category. (Residential / Businesses / Institutions). "),
+            html.P(["This bar chart displays either the total monthly revenue generated across a given year or the ARPU (average revenue per user) across a given year. You may also choose a user category to view data specific to that category ( ",
+                   html.Span("Residential" ,
+                             id = "residential_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ),
+                   ",",
+                   html.Span("Businesses" ,
+                             id = "businesses_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ), 
+                   ",",
+                   html.Span("Institutional" ,
+                             id = "institutional_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ),                   
+                   " ). ",]),
+            dbc.Tooltip(
+                "51 out of 60 customers",
+                target="residential_tooltip",
+                placement="bottom"),
+            dbc.Tooltip(
+                "7 out of 60 customers",
+                target="businesses_tooltip",
+                placement="bottom"),  
+            dbc.Tooltip(
+                "2 out of 60 customers",
+                target="institutional_tooltip",
+                placement = "bottom"),                   
             html.P("This is useful data to analyse as it provides information of how much monthly revenue the microgrid generated throughout the year or how much revenue the average customer generated. This data could be useful for developing a business plan as it enables evaluation of how much revenue the microgrid generates and how much an average customer generates. This format is also particularly useful as it enables easy visual analysis of how the total monthly revenue and ARPU vary month to month or seasonally throughout a given year, hence enabling trends to be established and analysed."),
             html.Br(),
             html.Hr(),
         ])
     elif tab == 'tab-2':
-        return html.Div([            
+        return html.Div([
             html.Hr(),
             html.H2("Monthly Usage for Given Year"),
             html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
@@ -967,7 +994,34 @@ def render_content(tab):
             html.Br(),
             dcc.Graph(id = 'my_graph_4', figure = {}),   
             html.Br(),
-            html.P("This chart is used to display the monthly usage of the entire microgrid over a given year of the selected user category. It also allows to view data sepeartely for each user category (Residential / Businesses / Institutions). "),
+            html.P(["This chart is used to display the monthly usage of the entire microgrid over a given year of the selected user category. It also allows to view data sepeartely for each user category ( " , 
+                   html.Span("Residential" ,
+                             id = "residential_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ),
+                   ",",
+                   html.Span("Businesses" ,
+                             id = "businesses_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ), 
+                   ",",
+                   html.Span("Institutional" ,
+                             id = "institutional_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ),                   
+                   " ). ",]),
+            dbc.Tooltip(
+                "51 out of 60 customers",
+                target="residential_tooltip",
+                placement="bottom"),
+            dbc.Tooltip(
+                "7 out of 60 customers",
+                target="businesses_tooltip",
+                placement="bottom"),  
+            dbc.Tooltip(
+                "2 out of 60 customers",
+                target="institutional_tooltip",
+                placement = "bottom"),
             html.P("This is useful data to display on our dashboard as it allows us to see how much energy is being consumed each month throughout a given year. This can help us identify seasonal trends i.e. increases in consumption due to more income during a particular season. A yearly graph can also give us a better idea of the increase/decrease in consumption over the years which would likely have a strong correlation with the grid's economic impact. "),
             html.Br(),
             html.Hr(),            
@@ -975,7 +1029,7 @@ def render_content(tab):
     elif tab == 'tab-3':
         return html.Div([
             html.Hr(),
-            html.H2("Microgrid Load Profile for Given Day"),
+            html.H2("Microgrid Load Profile for Given Day"), 
             html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
             html.H6("Please Select a Date:"),
             dcc.DatePickerSingle(
@@ -1002,39 +1056,61 @@ def render_content(tab):
             dcc.RadioItems(id = 'TorU_2',
                 options=[
                     {'label': 'Total', 'value': 1},
-                    {'label': 'Average', 'value': 2},                
-                    ],
+                    {'label': 'Average', 'value': 2},
+                ],
                 value=1,
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
-            ),
+            ),            
             dcc.Graph(id = 'my_graph_2', figure = {}),   
             html.Br(),
-            html.P("This chart displays the hourly usage of the entire microgrid or the hourly usage for the average customer on a given day. It is also possible to view data seperately based on the user category of your choosing. (Residential / Businesses / Institutions)."),
+            html.P(["This chart displays the hourly usage of the entire microgrid or the hourly usage for the average customer on a given day. It is also possible to view data seperately based on the user category of your choosing (",
+                   html.Span("Residential" ,
+                             id = "residential_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ),
+                   ",",
+                   html.Span("Businesses" ,
+                             id = "businesses_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ), 
+                   ",",
+                   html.Span("Institutional" ,
+                             id = "institutional_tooltip" ,
+                             style={"textDecoration": "underline", "cursor": "pointer"},
+                             ),                   
+                   " ). ",]),
+            dbc.Tooltip(
+                "51 out of 60 customers",
+                target="residential_tooltip",
+                placement="bottom"),
+            dbc.Tooltip(
+                "7 out of 60 customers",
+                target="businesses_tooltip",
+                placement="bottom"),  
+            dbc.Tooltip(
+                "2 out of 60 customers",
+                target="institutional_tooltip",
+                placement = "bottom"),                             
             html.P("This is useful in order to analyse how much power the system used in hourly intervals throughout a particular day for both the entire microgrid and for the average customer connected to the microgrid. This is also a beneficial format as it gives a more wholistic view of the entire system. This may be useful to analyse the impact of a particular event (e.g., a storm) on the entire system as we can zone in on any given day. It is also effective to see the total load of the system and, hence, may be useful to compare with battery charge state and other technical data."),
             html.Br(),
             html.Hr(),
-
-
-            html.H2("Microgrid Load Profile for Given Month"),
+            
+           
+            html.H2("Microgrid Load Profile for Given Range"),
+            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
+            html.Br(),
             html.H6("Please select start (left) and end (right) date: "),
-            dcc.DatePickerSingle(
-                id='my-date-picker-single-3',
+            dbc.Alert([html.I(className="bi bi-exclamation-circle-fill")," Invalid Range! Please select range that is over 1 day and less than 40 days."],id='range_alert',color= 'danger',class_name="d-flex align-items-center", is_open = False, duration = 3000),
+            dcc.DatePickerRange(
+            id='my-date-picker-range-3',
                 min_date_allowed=date(2020, 6, 5),
                 max_date_allowed=date(C_year, C_month, C_day),
                 initial_visible_month=date(C_year, C_month, C_day),
-                date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
+                start_date=date(C_year, C_month, C_day-6),
+                end_date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
                 # more user friendly
-            ),
-            dcc.DatePickerSingle(
-                id='my-date-picker-single-4',
-                min_date_allowed=date(2020, 6, 5),
-                max_date_allowed=date(C_year, C_month, C_day),
-                initial_visible_month=date(C_year, C_month, C_day),
-                date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
-                # more user friendly
-            ),
-            html.Button('Click me', id='create_button',style = {"float":"right"}),
-            html.Br(),            
+                ),
+            html.Br(),
             html.Br(),
             dcc.RadioItems(id = 'TorU',
                 options=[
@@ -1050,25 +1126,32 @@ def render_content(tab):
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
                     {'label': 'Businesses', 'value': 3},
-                    {'label': 'Institutional', 'value': 4},                
-                    ],
+                    {'label': 'Institutional', 'value': 4},
+                ],
                 value=1,
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
-            ),
+            ),              
             dcc.Graph(id = 'my_av_load_graph', figure={}),
             html.Br(),
-            html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day. This enables easy analysis of how much the peak load amount varies throughout the given month. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system throughout the month."),
+            html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day. This enables easy analysis of how much the peak load amount varies throughout the given range of days which must be less than 40 days due to API limitations. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the given week or month. This data could also be useful to compare month to month or week to week to see if the changing months/weeks has an impact on the peak loads of the system throughout the week/month."),
             html.P("This is useful in order to analyse how much power the system used on average throughout the given month and what the microgrid’s load profile looked like for that month and what the average customer’s load profile looked like for that given month. This may also be useful for generating a business plan and also comparing monthly or seasonally to analyse whether or not the changing months or seasons has an impact on the average usage of the microgrid."),
             html.Br(),
-            html.Hr()
+            html.Hr()          
         ])
     elif tab == 'tab-4':
         return html.Div([
             html.Br(),
             html.Hr(),
             html.H2("Peak Loads for Given Month"),
-            html.H6("Please Select a Month (YYYY-MM): "),        
-            dcc.Input(id="peak_date_IP", type="text", value=currentYYMM, placeholder="YYYY-MM", debounce=True,style={'fontSize':16}), 
+            html.H6("Please Select a Month: "),     
+            dcc.DatePickerSingle(
+                id='my-date-picker-single-5',
+                min_date_allowed=date(2020, 6, 5),
+                max_date_allowed=date(C_year, C_month, C_day),
+                initial_visible_month=date(C_year, C_month, C_day),
+                date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
+                # more user friendly
+            ), 
             dcc.Graph(id = 'my_peak_graph', figure={}),
             html.P("This chart displays the daily peak loads for the whole system throughout a given month."),
             html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day. This enables easy analysis of how much the peak load amount varies throughout the given month. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system throughout the month."),
@@ -1182,7 +1265,7 @@ def render_content(tab):
                          {"label": "058", "value": "Stephano Tobias"},
                          {"label": "059", "value": "Luciano Veleliyano"},
                          {"label": "060", "value": "Konoliyo Zipi"},
-                         ],    
+                         ],      
                      placeholder="Select a customer",
                      searchable = False,
                      clearable=False,
@@ -1199,7 +1282,7 @@ def render_content(tab):
                 initial_visible_month=date(C_year, C_month, C_day),
                 date=date(C_year, C_month, C_day)
             ),
-            html.Br(),  
+            html.Br(),        
             dcc.Graph(id = 'cust_on_day_graph', figure={}),
             html.Br(),
             html.P("This chart displays the hourly usage of a single customer on a given day."),
@@ -1289,8 +1372,6 @@ def render_content(tab):
             html.Br(),
             html.Hr(),
         ])
-
-
 
 def convert_nth_day(date):
     temp = str(date)
@@ -1565,18 +1646,21 @@ def update_cust_on_day_graph(date_value, cust_name):
     
 @app.callback(
     Output(component_id='my_av_load_graph', component_property='figure'),
-    [Input(component_id='my-date-picker-single-3', component_property='date'),
-     Input('my-date-picker-single-4','date'),
-     Input('slct_user_av', 'value'),     
-     Input('TorU','value')])
+    Output('range_alert','is_open'),
+    [Input(component_id='my-date-picker-range-3', component_property='start_date'),
+     Input('my-date-picker-range-3','end_date'),
+     Input('slct_user_av', 'value'),
+     Input('TorU','value')],
+    [State('range_alert','is_open')])
 
-def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
+
+def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open):
     date = str(start_date_value)
     date2=str(end_date_value)
     
     div=bttn1
     div2 = bttn2
-
+    
     if(div2==1):
         T = "Total"
     else:
@@ -1587,7 +1671,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
     end_time = str(date2)
     num = calc_difference_in_days(start_time,end_time)
     
-    if (num==0) or (num>35):
+    if (num==0) or (num>40):
         y_dont_care = []
         x_dont_care = []
         for index in range(1,24):
@@ -1602,14 +1686,15 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
         fig.update_layout(title = "Invalid Input",
                        xaxis_title='Time',
                        yaxis_title='Usage Amount (kWh)')  
-        return fig
+        return fig, not is_open
     else:
         pass
+
     
     #again redefining start and end time to be in correct format for get request
     start_time = str(date) + "-01T00:00:00"
     end_time = str(date2) + "-01T00:00:00"
-
+    
     #request to customer list
     url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
             
@@ -1636,7 +1721,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
                     cust_snames_res.append(holder['last_name'])
                 elif(holder['user_type'] == "BUS"):
                     cust_fnames_bus.append(holder['first_name'])
-                    cust_snames_bus.append(holder['last_name'])        
+                    cust_snames_bus.append(holder['last_name'])
                 else:
                     cust_fnames_ins.append(holder['first_name'])
                     cust_snames_ins.append(holder['last_name'])
@@ -1684,7 +1769,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
             holder = df['results'][0]
             
             usage_url = holder['utilities_url'] + "1/usage/"
-            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time        
+            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
             
             r2 = requests.get(url=url2, headers = header)
             s2 = r2.content
@@ -1770,28 +1855,28 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
     
     for index in range(0,len(df2['timestamp'])):
             timestamp.append(str(df2['timestamp'][index]))
-                                          
-            for index in range(0,24):
-                if(index<10):
-                    a = "0" + str(index)
-                else:
-                    a = str(index)
-                temp = a + ":00:00+00:00"
-                amount = 0
-                for count in range(0,len(timestamp)):
-                    holder = timestamp[count]
-                    if(temp == holder[11:26]):
-                        amount += float(hourly_usage[count])
-                        continue
-                    else:
-                        continue
-            if (div2==1):
-                load_profile.append(amount/num)
+            
+    for index in range(0,24):
+        if(index<10):
+            a = "0" + str(index)
+        else:
+            a = str(index)
+        temp = a + ":00:00+00:00"
+        amount = 0
+        for count in range(0,len(timestamp)):
+            holder = timestamp[count]
+            if(temp == holder[11:26]):
+                amount += float(hourly_usage[count])
+                continue
             else:
-                load_profile.append((amount/num)/divisor)
-            time.append(temp[0:8])
-
-   
+                continue
+        if (div2==1):
+            load_profile.append(amount/num)
+        else:
+            load_profile.append((amount/num)/divisor)
+        time.append(temp[0:8])
+    
+    
     start_time = str(date)
     end_time = str(date2) #
     
@@ -1806,171 +1891,158 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2):
                       yaxis_title='Usage Amount (kWh)',
                       yaxis_range=[-0.02,max(load_profile)+0.02])
     
+    return fig, is_open
+    
     return fig
             
 @app.callback(
     Output(component_id='my_peak_graph', component_property='figure'),
-    Input(component_id="peak_date_IP", component_property='value'),
+    Input(component_id='my-date-picker-single-5', component_property='date'),
 )
 
-def update_peak_graph(IP):
+def update_peak_graph(date_value):
     
-    date = str(IP)
+    date = str(date_value)
     month = date[5:7]
     
     start_time = str(date) + "-01T00:00:00"
+
+
+    if(int(date[5:7])==12):
+        end_time = str(int(date[0:4])+1) + "-01-01T00:00:00"
+    else:
+        if(int(date[5:7])<9):
+            end_time = str(date[0:6]) + str(int(date[6])+1) + "-01T00:00:00"
+        else:
+            end_time = str(date[0:5]) + str(int(date[5:7])+1) + "-01T00:00:00"
     
-    if(len(date))!=7:
+    #Changing the start time so that only month and year included so that start time is the start of the month
+    start_time = str(date[0:7]) + "-01T00:00:00"    
+                               
+    url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+    r = requests.get(url=url, headers = header)
+    s = r.content
+    df = pd.read_json(s)
+        
+    if(month == "01"):
+        M = "January"
+    elif(month == "02"):
+        M = "February"
+    elif(month == "03"):
+        M = "March"
+    elif(month == "04"):
+        M = "April"
+    elif(month == "05"):
+        M = "May"
+    elif(month == "06"):
+        M = "June"
+    elif(month == "07"):
+        M = "July"
+    elif(month == "08"):
+        M = "August"
+    elif(month == "09"):
+        M = "September"
+    elif(month == "10"):
+        M = "October"
+    elif(month == "11"):
+        M = "November"
+    else:
+        M = "December"
+            
+    if(month == "04" or month == "06" or month == "09" or month == "11"):
+        num = 30
+    elif(month == "02" and int(date[0:4])%4==0):
+        num = 29
+    elif(month == "02" and int(date[0:4])%4!=0):
+        num = 28
+    else:
+        num = 31
+    
+    if(len(df)==0):
         y_dont_care = []
         x_dont_care = []
-        for index in range(1,24):
+        for index in range(1,num+1):
             y_dont_care.append(0)
             x_dont_care.append(index)
-            
+                
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=x_dont_care, y=y_dont_care,
                             mode='lines+markers',
                             ))
+            
+        fig.update_layout(title = "Peak Loads for " + str(M) + " " + str(date[0:4]),
+                          xaxis_title='Date',
+                          yaxis_title='Peak Usage Amount (kWh)')  
+        return fig
+            
+    else:
+        timestamp = []
+        usage_amount = []
         
-        fig.update_layout(title = "Invalid Input",
-                       xaxis_title='Time',
-                       yaxis_title='Usage Amount (kWh)')  
+        for index in range(0,len(df['timestamp'])):
+            timestamp.append(str(df['timestamp'][index]))
+            usage_amount.append(df['usage'][index])
+                
+        temp = []
+        peaks = []
+        clock = []
+        clock2 = []
+        x = []
+        temporary = str(timestamp[0])
+        i = int(temporary[8:10])
+        date_index = i
+        
+        for j in range(0,24):
+            hold = str(j) + ":00:00"
+            clock2.append(datetime.datetime.strptime(hold, '%H:%M:%S').time())
+        
+        while(i<=num):
+                
+            for index in range(0,len(timestamp)):
+                temptime = timestamp[index]
+                if(i==int(temptime[8:10])):
+                    temp.append(usage_amount[index])
+                else:
+                    continue
+            
+            if(len(temp)==0):
+                temp.clear()
+                i+=1
+                date_index+=1
+            else:
+                peaks.append(max(temp))   
+                
+                for counter in range(0,len(timestamp)):
+                    holder = str(timestamp[counter])
+                    if(usage_amount[counter]==max(temp) and int(holder[8:10])==i):
+                        date_time_obj = datetime.datetime.strptime(holder[11:19], '%H:%M:%S')
+                        clock.append(date_time_obj.time())
+                        x.append(date_index)
+                        date_index+=1
+                        break
+                    else:
+                        continue  
+                
+                i+=1
+                temp.clear()  
+                
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatter(x=x, y=peaks,
+                            mode='lines+markers',
+                            ))
+            
+        fig.update_layout(title ="Peak Loads for " + str(M) + " " + str(date[0:4]),
+                          xaxis_title='Day of the Month',
+                          yaxis_title='Peak Usage Amount (kWh)', 
+                          xaxis = dict(
+                        tickmode = 'linear',
+                        tick0 = 1,
+                        dtick = 1),
+                          xaxis_range=[1,num],
+                          yaxis_range=[-0.02,max(peaks)+0.02])
         return fig
     
-    else:
-    
-        if(int(date[5:7])==12):
-            end_time = str(int(date[0:4])+1) + "-01-01T00:00:00"
-        else:
-            if(int(date[5:7])<9):
-                end_time = str(date[0:6]) + str(int(date[6])+1) + "-01T00:00:00"
-            else:
-                end_time = str(date[0:5]) + str(int(date[5:7])+1) + "-01T00:00:00"
-                                        
-        url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
-        r = requests.get(url=url, headers = header)
-        s = r.content
-        df = pd.read_json(s)
-        
-        if(month == "01"):
-            M = "January"
-        elif(month == "02"):
-            M = "February"
-        elif(month == "03"):
-            M = "March"
-        elif(month == "04"):
-            M = "April"
-        elif(month == "05"):
-            M = "May"
-        elif(month == "06"):
-            M = "June"
-        elif(month == "07"):
-            M = "July"
-        elif(month == "08"):
-            M = "August"
-        elif(month == "09"):
-            M = "September"
-        elif(month == "10"):
-            M = "October"
-        elif(month == "11"):
-            M = "November"
-        else:
-            M = "December"
-            
-        if(month == "04" or month == "06" or month == "09" or month == "11"):
-            num = 30
-        elif(month == "02" and int(date[0:4])%4==0):
-            num = 29
-        elif(month == "02" and int(date[0:4])%4!=0):
-            num = 28
-        else:
-            num = 31
-        
-        if(len(df)==0):
-            y_dont_care = []
-            x_dont_care = []
-            for index in range(1,num+1):
-                y_dont_care.append(0)
-                x_dont_care.append(index)
-                
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(x=x_dont_care, y=y_dont_care,
-                                mode='lines+markers',
-                                ))
-            
-            fig.update_layout(title = "Peak Loads for " + str(M) + " " + str(date[0:4]),
-                           xaxis_title='Date',
-                           yaxis_title='Peak Usage Amount (kWh)')  
-            return fig
-            
-        else:
-            timestamp = []
-            usage_amount = []
-                
-            for index in range(0,len(df['timestamp'])):
-                timestamp.append(str(df['timestamp'][index]))
-                usage_amount.append(df['usage'][index])
-                
-            temp = []
-            peaks = []
-            clock = []
-            clock2 = []
-            x = []
-            temporary = str(timestamp[0])
-            i = int(temporary[8:10])
-            date_index = i
-                
-            for j in range(0,24):
-                hold = str(j) + ":00:00"
-                clock2.append(datetime.datetime.strptime(hold, '%H:%M:%S').time())
-            
-            while(i<=num):
-                
-                for index in range(0,len(timestamp)):
-                    temptime = timestamp[index]
-                    if(i==int(temptime[8:10])):
-                        temp.append(usage_amount[index])
-                    else:
-                        continue
-                
-                if(len(temp)==0):
-                    temp.clear()
-                    i+=1
-                    date_index+=1
-                else:
-                    peaks.append(max(temp))   
-                    
-                    for counter in range(0,len(timestamp)):
-                        holder = str(timestamp[counter])
-                        if(usage_amount[counter]==max(temp) and int(holder[8:10])==i):
-                            date_time_obj = datetime.datetime.strptime(holder[11:19], '%H:%M:%S')
-                            clock.append(date_time_obj.time())
-                            x.append(date_index)
-                            date_index+=1
-                            break
-                        else:
-                            continue  
-                    
-                    i+=1
-                    temp.clear()  
-                    
-            fig = go.Figure()
-        
-            fig.add_trace(go.Scatter(x=x, y=peaks,
-                                mode='lines+markers',
-                                ))
-            
-            fig.update_layout(title = "Peak Loads for " + str(M) + " " + str(date[0:4]),
-                            xaxis_title='Date',
-                            yaxis_title='Peak Usage Amount (kWh)', 
-                            xaxis = dict(
-                            tickmode = 'linear',
-                            tick0 = 1,
-                            dtick = 1),
-                            xaxis_range=[0,num+1],
-                            yaxis_range=[-0.02,max(peaks)+0.02])
-            return fig
-
 @app.callback(
     Output(component_id='my_graph_1', component_property='figure'),
     [Input(component_id='slct_year', component_property='value'),
