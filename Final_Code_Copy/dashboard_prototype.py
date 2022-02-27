@@ -1716,7 +1716,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
     
     div=bttn1
     div2 = bttn2
-
+    
     if(div2==1):
         T = "Total"
     else:
@@ -1750,7 +1750,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
     #again redefining start and end time to be in correct format for get request
     start_time = str(date) + "-01T00:00:00"
     end_time = str(date2) + "-01T00:00:00"
-
+    
     #request to customer list
     url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
             
@@ -1777,7 +1777,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
                     cust_snames_res.append(holder['last_name'])
                 elif(holder['user_type'] == "BUS"):
                     cust_fnames_bus.append(holder['first_name'])
-                    cust_snames_bus.append(holder['last_name'])        
+                    cust_snames_bus.append(holder['last_name'])
                 else:
                     cust_fnames_ins.append(holder['first_name'])
                     cust_snames_ins.append(holder['last_name'])
@@ -1825,7 +1825,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
             holder = df['results'][0]
             
             usage_url = holder['utilities_url'] + "1/usage/"
-            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time        
+            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
             
             r2 = requests.get(url=url2, headers = header)
             s2 = r2.content
@@ -1911,28 +1911,28 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
     
     for index in range(0,len(df2['timestamp'])):
             timestamp.append(str(df2['timestamp'][index]))
-                                          
-            for index in range(0,24):
-                if(index<10):
-                    a = "0" + str(index)
-                else:
-                    a = str(index)
-                temp = a + ":00:00+00:00"
-                amount = 0
-                for count in range(0,len(timestamp)):
-                    holder = timestamp[count]
-                    if(temp == holder[11:26]):
-                        amount += float(hourly_usage[count])
-                        continue
-                    else:
-                        continue
-            if (div2==1):
-                load_profile.append(amount/num)
+            
+    for index in range(0,24):
+        if(index<10):
+            a = "0" + str(index)
+        else:
+            a = str(index)
+        temp = a + ":00:00+00:00"
+        amount = 0
+        for count in range(0,len(timestamp)):
+            holder = timestamp[count]
+            if(temp == holder[11:26]):
+                amount += float(hourly_usage[count])
+                continue
             else:
-                load_profile.append((amount/num)/divisor)
-            time.append(temp[0:8])
-
-   
+                continue
+        if (div2==1):
+            load_profile.append(amount/num)
+        else:
+            load_profile.append((amount/num)/divisor)
+        time.append(temp[0:8])
+    
+    
     start_time = str(date)
     end_time = str(date2) #
     
@@ -1948,7 +1948,7 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
                       yaxis_range=[-0.02,max(load_profile)+0.02])
     
     return fig, is_open
-
+    
     return fig
             
 @app.callback(
