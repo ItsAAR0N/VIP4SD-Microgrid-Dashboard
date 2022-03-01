@@ -802,6 +802,12 @@ def render_social_tabs(tab):
                 html.Br(),
                 html.Hr(),
                 html.H2("Health and Education Content To Go Here"),
+               
+                html.Br(),
+                html.Div(         
+                    html.Dialog("Access to adequate energy can impact health and education by either directly powering medical equipment and devices used in the classroom or simple poweeing lights for nightimes study, or allowing people to charge their phones for medical information."),
+                    style={'fontSize':16}),
+               
                 dcc.Graph(id='H&E_graph_1', figure=fig_NoSchool),
                 html.Hr(),
                 ])
