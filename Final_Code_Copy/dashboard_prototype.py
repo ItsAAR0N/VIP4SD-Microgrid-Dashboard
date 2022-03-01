@@ -766,15 +766,23 @@ def render_social_tabs(tab):
                     style={'fontSize':16}),
                
                 dcc.Graph(id='Energy_Access_Graph_1', figure=fig_EnergySatisfaction),
+                html.P("This chart displays how satified the users are with their level of access to electricity."),
+                html.P(" Tracking this indicator is key to project success, grasping if the community is happy or not with the microgrid."),           
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Energy_Access_Graph_2', figure=fig_EnergySources),
+                html.P("This chart displays what enegy sources are being used to power the community."),
+                html.P(" Tracking this indicator shows us if the community who use the microgrid still require alternative sources to meet their energy needs."),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Energy_Access_Graph_3', figure=fig_Appliances),
+                html.P("This chart displays the household appliances used by the community."),
+                html.P(" Energy access makes it possible for the community to use modern household luxuries such as TVs and even modern necessities like refrigerators."),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Energy_Access_Graph_4', figure=fig_LightSources ),
+                html.P("This chart displays what sources are being used to power lighting in homes."),
+                html.P(" This provides more insight into how the community is using the microgrid energy or if they are still reliant on other sources."),   
                 html.Hr(),
                 ])   
     elif tab == 'tab-2':
@@ -789,12 +797,18 @@ def render_social_tabs(tab):
                    style={'fontSize':16}),
                 
                dcc.Graph(id='Tariff_Graph_1', figure=fig_CostSatisfaction),
+               html.P("This chart displays how satified the users are with how much they are paying for their electricity."),
+               html.P(" Tracking this indicator may highlight any potential problems with pricing, a key indicator of SDG7 is 'affordability' which directly impacts the success of the project."),   
                html.Hr(),
                html.Br(),
                dcc.Graph(id='Tariff_Graph_2', figure=fig_PaymentMethod ),
+               html.P("This chart displays how satified the users are with HOW they pay for their energy."),
+               html.P(" Tracking this indicator helps inform the business model and the service provided. Paying for energy should not be confusing and this indicator helps us make sure it is not."),   
                html.Hr(),
                html.Br(),
                dcc.Graph(id='Tariff_Graph_3', figure=fig_Recommendation ),
+               html.P("This chart displays how likely the current microgrid users are to reccomend the service to a neighbour or friend."),
+               html.P(" Tracking this indicator is another way of grasping the communities opinion and satisfaction with the microgrid and service."),   
                html.Hr(),
                ])
     elif tab == 'tab-3':
@@ -823,9 +837,13 @@ def render_social_tabs(tab):
                     style={'fontSize':16}),
                 
                 dcc.Graph(id='E&P_graph_1', figure=fig_Finances),
+                html.P("This chart displays the average monthly incomes and expenditures of microgrid users."),
+                html.P(" Tracking this indicator allows us to monitor is energy access is leading to any economic development in the town."),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='E&P_graph_2', figure=fig_FinancialSecurity),
+                html.P("This chart displays how financially secure microgrid users feel their household is."),
+                html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective."),   
                 html.Hr(),
                 ])
     elif tab == 'tab-5':
@@ -840,18 +858,23 @@ def render_social_tabs(tab):
                     style={'fontSize':16}),
                 
                 dcc.Graph(id='Women_Power_Graph_1', figure=fig_WomenFreetime),
+                html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of freetime they have."),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_2', figure=fig_WomenIndependance),
+                html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of independance and decision making power they have in the household."),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_3', figure=fig_WomenRespectHOME),
+                html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of respect they recieve in the HOUSEHOLD."),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_4', figure=fig_WomenRespectCOMM),
+                html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of respect they recieve in the COMMUNITY"),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_5', figure=fig_HomeSecurity),
+                html.P("This chart displays how the women of the town feel the microgrid has changed how secure they feel in their home."),
                 html.Hr(),
                 ])
     
