@@ -100,6 +100,7 @@ df_ER = pd.read_json(s)
 df_NoSchool = pd.read_excel(os.path.join(APP_ROOT, r'Children_Not_School.xlsx'))
 # Employment and Finance # 
 df_Finances = pd.read_excel(os.path.join(APP_ROOT, r'Monthly_Finances.xlsx'))
+df_Income = pd.read_excel('Monthly_Income.xlsx')
 df_FinancialSecurity = pd.read_excel(os.path.join(APP_ROOT, r'Financial_Security.xlsx'))
 
 # Energy Access #
@@ -143,6 +144,17 @@ def funct_Finances(df):
         y = finances,
         color = limit,)
     return fig_Income
+
+def funct_Income(df):
+    income = df['Monthly Income (MWK)']
+    limit  = df['Range']
+    survey = df['Survey']
+    fig_incomex = px.line(
+        df,
+        x = survey,
+        y = income,
+        color = limit,)
+    return fig_incomex
 
 def funct_FinancialSecurity(df):
     survey     = df['Survey']
@@ -388,6 +400,11 @@ fig_Finances = funct_Finances(df_Finances)
 fig_Finances.update_layout(title = "Average Monthly Income and Expenditure",
                xaxis_title='Survey',
                yaxis_title='Monthly Income and Expenditure (MWK)') 
+
+fig_Income = funct_Income(df_Income)
+fig_Income.update_layout(title = "Monthly Income, Highest and Lowest Average (MWK)",
+               xaxis_title = 'Survey',
+               yaxis_title = 'Monthly Income (MWK)')
 
 fig_FinancialSecurity = funct_FinancialSecurity(df_FinancialSecurity)
 fig_FinancialSecurity.update_layout(title = "Household Financial Security",
@@ -676,6 +693,7 @@ def render_page_content(pathname):
                 children = html.H1("Social Impact Data"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),
                 html.Hr(),
                 html.P("Social Impact data is the measure of how a product or service changes the lives of the people and community that uses it. The social impact data of the microgrid has been broken down into five categories shown by the tabs below. "),
+                html.P("As of February 2022, three Social Impact surveys have been conducted. "),
                 html.Br(),
                 html.Hr(),
                 dcc.Tabs(id='social_tabs', value='tab-1', children=[
@@ -852,21 +870,33 @@ def render_social_tabs(tab):
                     style={'fontSize':16}),
                
                 dcc.Graph(id='Energy_Access_Graph_1', figure=fig_EnergySatisfaction),
+                html.Div(         
+                    html.Dialog("Q: Overall, on a scale of 1-5, how happy are you with your household's current level of access to energy?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays how satified the users are with their level of access to electricity."),
                 html.P(" Tracking this indicator is key to project success, grasping if the community is happy or not with the microgrid."),           
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Energy_Access_Graph_2', figure=fig_EnergySources),
+                html.Div(         
+                    html.Dialog("Q: What source of electricity does your home use?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays what enegy sources are being used to power the community."),
                 html.P(" Tracking this indicator shows us if the community who use the microgrid still require alternative sources to meet their energy needs."),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Energy_Access_Graph_3', figure=fig_Appliances),
+                html.Div(         
+                    html.Dialog("Q: What appliances are owned by your household?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays the household appliances used by the community."),
                 html.P(" Energy access makes it possible for the community to use modern household luxuries such as TVs and even modern necessities like refrigerators."),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Energy_Access_Graph_4', figure=fig_LightSources ),
+                html.Div(         
+                    html.Dialog("Q: What lighting source does your household use?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays what sources are being used to power lighting in homes."),
                 html.P(" This provides more insight into how the community is using the microgrid energy or if they are still reliant on other sources."),   
                 html.Hr(),
@@ -881,18 +911,30 @@ def render_social_tabs(tab):
                html.Div(         
                    html.Dialog("Tariff and Service satisfaction is an important indicator to track to ensure the continued success of the project. This data allows the Microgrid team to make informed decisions regarding the pricing and service offered to the community. These questions were asked to the 55 houshlods connected to the Microgrid."),
                    style={'fontSize':16}),
-                
+               html.Div(         
+                   html.Dialog("QUESTIONS: since the installation of the microgrid..."),
+                   style={'fontSize':14}),
+              
                dcc.Graph(id='Tariff_Graph_1', figure=fig_CostSatisfaction),
+               html.Div(         
+                    html.Dialog("Q: On a scale of 1-5, how happy are you with how much you pay for your tariff??"),
+                    style={'fontSize':14}),
                html.P("This chart displays how satified the users are with how much they are paying for their electricity."),
                html.P(" Tracking this indicator may highlight any potential problems with pricing, a key indicator of SDG7 is 'affordability' which directly impacts the success of the project."),   
                html.Hr(),
                html.Br(),
                dcc.Graph(id='Tariff_Graph_2', figure=fig_PaymentMethod ),
+               html.Div(         
+                    html.Dialog("Q: On a scale of 1-5, how happy are you with the method of paying for your tariff??"),
+                    style={'fontSize':14}),
                html.P("This chart displays how satified the users are with HOW they pay for their energy."),
                html.P(" Tracking this indicator helps inform the business model and the service provided. Paying for energy should not be confusing and this indicator helps us make sure it is not."),   
                html.Hr(),
                html.Br(),
                dcc.Graph(id='Tariff_Graph_3', figure=fig_Recommendation ),
+               html.Div(         
+                    html.Dialog("Q: On a scale of 1 - 5, how likely would you be to recommend the minigrid to a friend? ?"),
+                    style={'fontSize':14}),
                html.P("This chart displays how likely the current microgrid users are to reccomend the service to a neighbour or friend."),
                html.P(" Tracking this indicator is another way of grasping the communities opinion and satisfaction with the microgrid and service."),   
                html.Hr(),
@@ -909,6 +951,9 @@ def render_social_tabs(tab):
                     style={'fontSize':16}),
                
                 dcc.Graph(id='H&E_graph_1', figure=fig_NoSchool),
+                html.Div(         
+                    html.Dialog("Q: How many school aged children in your household do not go to school??"),
+                    style={'fontSize':14}),
                 html.Hr(),
                 ])
     elif tab == 'tab-4':
@@ -923,6 +968,9 @@ def render_social_tabs(tab):
                     style={'fontSize':16}),
                 
                 dcc.Graph(id='E&P_graph_1', figure=fig_Finances),
+                html.Div(         
+                    html.Dialog("Q: Overall, on a scale of 1 - 5, how secure do you feel your household's finances are??"),
+                    style={'fontSize':14}),
                 html.P("This chart displays the average monthly incomes and expenditures of microgrid users."),
                 html.P(" Tracking this indicator allows us to monitor is energy access is leading to any economic development in the town."),   
                 html.Hr(),
@@ -931,6 +979,9 @@ def render_social_tabs(tab):
                 html.P("This chart displays how financially secure microgrid users feel their household is."),
                 html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective."),   
                 html.Hr(),
+                dcc.Graph(id='E&F_graph_3', figure=fig_Income),
+                html.Hr(),
+                html.Br(),
                 ])
     elif tab == 'tab-5':
         return html.Div([
@@ -942,24 +993,43 @@ def render_social_tabs(tab):
                 html.Div(         
                     html.Dialog("The Social Impact of the microgrid in terms of Women Empowerment is how the Solar Microgrid has changed the women, who use its, lives. The 28 women in Mthembanji who are connected to the Microgrid were asked a series of questions to see if their situation has changed since its installation."),
                     style={'fontSize':16}),
+                html.Br(),
+                html.Div(         
+                    html.Dialog("QUESTIONS: since the installation of the microgrid..."),
+                    style={'fontSize':14}),
                 
                 dcc.Graph(id='Women_Power_Graph_1', figure=fig_WomenFreetime),
+                    html.Div(         
+                    html.Dialog("Q: how has the ammount of freetime you have changed?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of freetime they have."),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_2', figure=fig_WomenIndependance),
+                    html.Div(         
+                    html.Dialog("Q: how has your of independance and decision-making power changed?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of independance and decision making power they have in the household."),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_3', figure=fig_WomenRespectHOME),
+                    html.Div(         
+                    html.Dialog("Q: how has the ammount of respect you get in the household changed?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of respect they recieve in the HOUSEHOLD."),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_4', figure=fig_WomenRespectCOMM),
+                html.Div(         
+                    html.Dialog("Q: how has the ammount of respect you get in the community changed?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays how the women of the town feel the microgrid has changed the ammount of respect they recieve in the COMMUNITY"),
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='Women_Power_Graph_5', figure=fig_HomeSecurity),
+                html.Div(         
+                    html.Dialog("Q: how has your security in the home changed?"),
+                    style={'fontSize':14}),
                 html.P("This chart displays how the women of the town feel the microgrid has changed how secure they feel in their home."),
                 html.Hr(),
                 ])
