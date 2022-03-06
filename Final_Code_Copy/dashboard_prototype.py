@@ -1091,7 +1091,7 @@ def render_tech_tabs_2(tab):
                 dcc.Graph(id='holder_graph_1', figure=holder_fig),
                 html.Hr(),
                 ])
-  
+
 @app.callback(
         Output('tabs-example-content', 'children'),
         Input('tabs-example', 'value'))
@@ -1309,7 +1309,6 @@ def render_content(tab):
             html.P("This is useful in order to analyse how much power the system used in hourly intervals throughout a particular day for both the entire microgrid and for the average customer connected to the microgrid. This is also a beneficial format as it gives a more wholistic view of the entire system. This may be useful to analyse the impact of a particular event (e.g., a storm) on the entire system as we can zone in on any given day. It is also effective to see the total load of the system and, hence, may be useful to compare with battery charge state and other technical data."),
             html.Br(),
             html.Hr(),
-            
 
             html.H2("Microgrid Load Profile for Given Range"),
             html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
@@ -1368,10 +1367,28 @@ def render_content(tab):
                 # more user friendly
             ), 
             dcc.Graph(id = 'my_peak_graph', figure={}),
-            html.P("This chart displays the daily peak loads for the whole system throughout a given month."),
-            html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day. This enables easy analysis of how much the peak load amount varies throughout the given month. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system throughout the month."),
             html.Br(),
             html.Hr(),
+            html.H2("Peak Load for Given Year"),
+            html.H6("Please Select a Year: "),# New quality of life improvements
+            dcc.Dropdown(id="slct_year",
+                     options=[
+                         {"label": "2020", "value": 2020},
+                         {"label": "2021", "value": 2021},
+                         {"label": "2022", "value": 2022}],
+                     placeholder="Select a year",
+                     searchable = False,
+                     multi=False,
+                     value=C_year,
+                     style={'width': "40%"}
+                     ),
+            html.Br(),
+        dcc.Graph(id='my_peak_graph_2', figure = {}),
+        html.Br(),
+        html.Hr(),
+        html.Hr(),
+        html.P("The charts above display the daily peak loads for the whole system throughout a given month or year."),
+        html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day or month. This enables easy analysis of how much the peak load amount varies throughout the given time period. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month/year. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system."),
         ])
     elif tab == 'tab-5':
             numOn = 0
@@ -2257,7 +2274,58 @@ def update_peak_graph(date_value):
                           xaxis_range=[1,num],
                           yaxis_range=[-0.02,max(peaks)+0.02])
         return fig
+    
+@app.callback(
+    Output(component_id='my_peak_graph_2', component_property = 'figure'),
+    Input(component_id='slct_year', component_property ='value'))
 
+def update_peak_graph_2(date):
+    
+    date = str(date)
+    
+    start_time = str(date) + "-01-01T00:00:00"
+    end_time = str(int(date)+1) + "-01-01T00:00:00" 
+    
+    timestamp = []
+    time = ["January","February","March","April","May","June","July","August","September","October","November","December"]  
+    usage = []
+    
+    url= "https://api.steama.co/sites/26385/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
+
+    r = requests.get(url, headers = header)
+    s = r.content
+    df = pd.read_json(s)
+            
+    for index in range(0,len(df['timestamp'])):
+                        usage.append(df['usage'][index])
+                        timestamp.append(df['timestamp'][index])
+    
+    peaks=[]
+    
+    for i in range(1,13):
+        temp=[0]*365
+        for index in range (0, len(timestamp)):
+            temptime = str(timestamp[index])
+            if(i==int(temptime[5:7])):
+                temp.append(float(usage[index]))
+        max_value = max(temp)
+        peaks.append(max_value)
+        
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatter(x=time, y=peaks,
+                            mode='lines+markers',
+                            ))
+            
+        fig.update_layout(title ="Peak Loads for " + str(start_time[0:4]),
+                        xaxis_title='Month',
+                        yaxis_title='Peak Usage Amount (kWh)', 
+                        xaxis = dict(
+                        tickmode = 'linear',
+                        tick0 = 1,
+                        dtick = 1),
+                        yaxis_range=[-0.02,max(peaks)+0.02])
+    return fig
 @app.callback(
     Output(component_id='my_graph_1', component_property='figure'),
     [Input(component_id='slct_year', component_property='value'),
