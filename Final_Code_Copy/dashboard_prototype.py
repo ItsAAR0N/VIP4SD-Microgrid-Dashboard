@@ -1172,7 +1172,7 @@ def render_content(tab):
     elif tab == 'tab-2':
         return html.Div([            
             html.Hr(),
-            html.H2("Monthly Usage for Given Year"),
+            html.H2("Monthly Demand for Given Year"),
             html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
             html.H6("Please Select a Year: "),# New quality of life improvements
             dcc.Dropdown(id="slct_year",
