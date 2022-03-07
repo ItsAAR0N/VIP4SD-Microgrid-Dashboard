@@ -694,6 +694,12 @@ def render_page_content(pathname):
                 html.Hr(),
                 html.P("Social Impact data is the measure of how a product or service changes the lives of the people and community that uses it. The social impact data of the microgrid has been broken down into five categories shown by the tabs below. "),
                 html.P("As of February 2022, three Social Impact surveys have been conducted. "),
+                html.P("Baseline: August 2019"),
+                html.P("Microgrid Installed: July 2020"),
+                html.P("Survey 1: May 2021"),
+                html.P("Survey 2: February 2022"),
+                html.P("Survey 3: (planned) July 2022"),
+                       
                 html.Br(),
                 html.Hr(),
                 dcc.Tabs(id='social_tabs', value='tab-1', children=[
