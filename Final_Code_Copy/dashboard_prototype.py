@@ -102,6 +102,7 @@ df_NoSchool = pd.read_excel(os.path.join(APP_ROOT, r'Children_Not_School.xlsx'))
 df_Finances = pd.read_excel(os.path.join(APP_ROOT, r'Monthly_Finances.xlsx'))
 df_Income = pd.read_excel('Monthly_Income.xlsx')
 df_FinancialSecurity = pd.read_excel(os.path.join(APP_ROOT, r'Financial_Security.xlsx'))
+df_business_month = pd.read_excel('Businesses_Month.xlsx')
 
 # Energy Access #
 df_EnergySources = pd.read_excel(os.path.join(APP_ROOT, r'Electricity_Source.xlsx'))
@@ -175,8 +176,17 @@ def funct_FinancialSecurity(df):
             'Quite Secure':'limegreen',
             'Very Secure':'green'},
         range_y = [0,55],)
-        
     return fig_FinancialSecurity
+
+def funct_Business_Month(df):
+    date = df['Date']
+    num_business = df['Number of Businesses']
+    fig_BusinessMonth = px.line(
+        df,
+        title = 'Number of Businesses VS. Months After Microgrid Installation',
+        x = date,
+        y = num_business,)
+    return fig_BusinessMonth
 
 # Energy Access #
 def funct_EnergySources(df): 
@@ -409,7 +419,13 @@ fig_Income.update_layout(title = "Monthly Income, Highest and Lowest Average (MW
 fig_FinancialSecurity = funct_FinancialSecurity(df_FinancialSecurity)
 fig_FinancialSecurity.update_layout(title = "Household Financial Security",
                xaxis_title='Survey',
-               yaxis_title='Number of Households') 
+               yaxis_title='Number of Households')
+
+fig_BusinessMonth = funct_Business_Month(df_business_month)
+fig_BusinessMonth.update_layout(title = "Number of Businesses VS. Months After Microgrid Installation",
+               xaxis_title='Month and Year',
+               yaxis_title='Number of Businesses') 
+
 # Energy Access #
 fig_EnergySources = funct_EnergySources(df_EnergySources)
 fig_EnergySources.update_layout(title = "Household Source of Electricity Used",
@@ -988,6 +1004,10 @@ def render_social_tabs(tab):
                 dcc.Graph(id='E&F_graph_3', figure=fig_Income),
                 html.Hr(),
                 html.Br(),
+                dcc.Graph(id='E&P_graph_4', figure=fig_BusinessMonth),
+                html.P("This chart track how many businesses there are in Mthembanji, each month since the installation of the Solar Microgrid"),
+                html.P(" Energy access can cause economic development and open doors to new business opportunities. This indicator tracks this each month to see the effect a modern energy supply has."),   
+                html.Hr(),
                 ])
     elif tab == 'tab-5':
         return html.Div([
