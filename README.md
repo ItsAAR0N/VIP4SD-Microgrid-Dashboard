@@ -64,7 +64,7 @@ https://www.bootstrapcdn.com/bootswatch/
 https://hackerthemes.com/bootstrap-cheatsheet/
 
 
-*Imported libraries used:* 
+*Imported libraries used (dependencies):* 
 
 import dash
 import dash_core_components as dcc
