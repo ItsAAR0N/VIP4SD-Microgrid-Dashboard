@@ -96,13 +96,15 @@ df_ER = pd.read_json(s)
 #====================SOCIAL IMPACT=============================================
 #......................DATAFRAMES..............................................
 # Health and Education # 
-
+df_SmartphoneSatisfaction = pd.read_excel(os.path.join(APP_ROOT, r'AccessToSmartphones.xlsx'))
 df_NoSchool = pd.read_excel(os.path.join(APP_ROOT, r'Children_Not_School.xlsx'))
+df_StudyingHours = pd.read_excel(os.path.join(APP_ROOT, r'StudyingHours.xlsx'))
+
 # Employment and Finance # 
 df_Finances = pd.read_excel(os.path.join(APP_ROOT, r'Monthly_Finances.xlsx'))
-df_Income = pd.read_excel('Monthly_Income.xlsx')
+df_Income = pd.read_excel(os.path.join(APP_ROOT, r'Monthly_Income.xlsx'))
 df_FinancialSecurity = pd.read_excel(os.path.join(APP_ROOT, r'Financial_Security.xlsx'))
-df_business_month = pd.read_excel('Businesses_Month.xlsx')
+df_business_month = pd.read_excel(os.path.join(APP_ROOT, r'Businesses_Month.xlsx'))
 
 # Energy Access #
 df_EnergySources = pd.read_excel(os.path.join(APP_ROOT, r'Electricity_Source.xlsx'))
@@ -123,6 +125,16 @@ df_WomenRespectCOMM = pd.read_excel(os.path.join(APP_ROOT, r'Respect_Community.x
 df_HomeSecurity = pd.read_excel(os.path.join(APP_ROOT, r'HouseholdSecurity.xlsx'))
 #......................FUNCTIONS...............................................
 # Health and Education #
+def funct_StudyingHours(df):
+    survey = df['Survey']
+    avg_hours = df['Avg_Hours']
+    fig_StudyingHours = px.bar(
+        df,
+        title = 'Average Number of Hours Spent Studying in the Home',
+        x = survey,
+        y = avg_hours,)
+    return fig_StudyingHours
+
 def funct_NoSchool(df):
     children   = df['Number of Children']
     survey     = df['Survey']
@@ -132,6 +144,28 @@ def funct_NoSchool(df):
         x = survey,
         y = children)
     return fig_NoSchool
+
+def funct_SmartphoneSatisfaction(df):
+    survey  = df['Survey']
+    v_unhap = df['Very Unhappy']
+    q_unhap = df['Quite Unhappy']
+    neutral = df['Neutral']
+    q_hap   = df['Quite Happy']
+    v_hap   = df['Very Happy']
+    
+    fig_SmartPhoneSatisfaction = px.bar(
+        df,
+        title = 'Payment Method Satisfaction',
+        x = survey,
+        y = [v_unhap,q_unhap,neutral,q_hap,v_hap],
+        color_discrete_map = {
+            'Very Unhappy':'red',
+            'Quite Unhappy':'orange',
+            'Neutral':'yellow',
+            'Quite Happy':'limegreen',
+            'Very Happy':'green'},
+        range_y = [0,55],)
+    return fig_SmartPhoneSatisfaction
 
 # Employment and Finance #
 def funct_Finances(df):
@@ -400,10 +434,20 @@ def funct_HomeSecurity(df):
     return fig_HomeSecurity
 #.......................FIGURES................................................
 # Health and Education #
+fig_StudyingHours = funct_StudyingHours(df_StudyingHours)
+fig_StudyingHours.update_layout(title = "Average Number of Hours Spent Studying in the Home (Weekly)",
+               xaxis_title='Survey',
+               yaxis_title='Average Number of Hours Studying per Week (Hours)') 
+
 fig_NoSchool = funct_NoSchool(df_NoSchool)
 fig_NoSchool.update_layout(title = "Number of School Aged Children not in Education",
                xaxis_title='Survey',
                yaxis_title='Number of Children') 
+
+fig_SmartPhoneSatisfaction = funct_SmartphoneSatisfaction(df_SmartphoneSatisfaction)
+fig_SmartPhoneSatisfaction.update_layout(title = "Satisfaction of Access to Smartphones",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
 
 # Employment and Finance #
 fig_Finances = funct_Finances(df_Finances)
@@ -721,7 +765,7 @@ def render_page_content(pathname):
                 dcc.Tabs(id='social_tabs', value='tab-1', children=[
                 dcc.Tab(label='Energy Access', value='tab-1'), 
                 dcc.Tab(label='Tariff and Service', value='tab-2'),                    
-                dcc.Tab(label='Health and Education', value='tab-3'),
+                dcc.Tab(label='Health, Education and Communication', value='tab-3'),
                 dcc.Tab(label='Employment and Finance', value='tab-4'),
                 dcc.Tab(label='Women Empowerment', value='tab-5'),
                 ],),              
@@ -965,18 +1009,32 @@ def render_social_tabs(tab):
         return html.Div([
                 html.Br(),
                 html.Hr(),
-                html.H2("Health and Education Content To Go Here"),
+                html.H2("Health, Education and Communitcation Data"),
                
                 html.Br(),
                 html.Div(         
                     html.Dialog("Access to adequate energy can impact health and education by either directly powering medical equipment and devices used in the classroom or simple poweeing lights for nightimes study, or allowing people to charge their phones for medical information."),
                     style={'fontSize':16}),
                
-                dcc.Graph(id='H&E_graph_1', figure=fig_NoSchool),
+                dcc.Graph(id='H&E_graph_1', figure=fig_StudyingHours),
+                html.Div(         
+                    html.Dialog("Q: How many hours do children do school work in the home per WEEK?"),
+                    style={'fontSize':14}),
+                html.Hr(),
+               
+                dcc.Graph(id='H&E_graph_2', figure=fig_SmartPhoneSatisfaction),
+                html.Div(         
+                    html.Dialog("Q: Overall, on a scale of 1 - 5, how happy are you with your current level of access to mobile phones and their performance?"),
+                    style={'fontSize':14}),
+                html.Hr(),
+               
+                dcc.Graph(id='H&E_graph_3', figure=fig_NoSchool),
                 html.Div(         
                     html.Dialog("Q: How many school aged children in your household do not go to school??"),
                     style={'fontSize':14}),
                 html.Hr(),
+               
+               
                 ])
     elif tab == 'tab-4':
         return html.Div([
@@ -989,7 +1047,11 @@ def render_social_tabs(tab):
                     html.Dialog("Monitoring the Microgrid's social impact on finance and employment allows us to see if any economic development is happening."),
                     style={'fontSize':16}),
                 
-                dcc.Graph(id='E&P_graph_1', figure=fig_Finances),
+                dcc.Graph(id='E&P_graph_1', figure=fig_BusinessMonth),
+                html.P("This chart track how many businesses there are in Mthembanji, each month since the installation of the Solar Microgrid"),
+                html.P(" Energy access can cause economic development and open doors to new business opportunities. This indicator tracks this each month to see the effect a modern energy supply has."),   
+                html.Hr(),
+                dcc.Graph(id='E&P_graph_2', figure=fig_Finances),
                 html.Div(         
                     html.Dialog("Q: Overall, on a scale of 1 - 5, how secure do you feel your household's finances are??"),
                     style={'fontSize':14}),
@@ -997,17 +1059,14 @@ def render_social_tabs(tab):
                 html.P(" Tracking this indicator allows us to monitor is energy access is leading to any economic development in the town."),   
                 html.Hr(),
                 html.Br(),
-                dcc.Graph(id='E&P_graph_2', figure=fig_FinancialSecurity),
+                dcc.Graph(id='E&P_graph_3', figure=fig_FinancialSecurity),
                 html.P("This chart displays how financially secure microgrid users feel their household is."),
                 html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective."),   
                 html.Hr(),
-                dcc.Graph(id='E&F_graph_3', figure=fig_Income),
+                dcc.Graph(id='E&F_graph_4', figure=fig_Income),
                 html.Hr(),
                 html.Br(),
-                dcc.Graph(id='E&P_graph_4', figure=fig_BusinessMonth),
-                html.P("This chart track how many businesses there are in Mthembanji, each month since the installation of the Solar Microgrid"),
-                html.P(" Energy access can cause economic development and open doors to new business opportunities. This indicator tracks this each month to see the effect a modern energy supply has."),   
-                html.Hr(),
+
                 ])
     elif tab == 'tab-5':
         return html.Div([
