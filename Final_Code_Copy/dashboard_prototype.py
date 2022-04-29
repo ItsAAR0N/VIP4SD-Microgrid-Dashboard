@@ -752,11 +752,11 @@ def render_page_content(pathname):
                 html.Hr(),
                 html.P("Social Impact data is the measure of how a product or service changes the lives of the people and community that uses it. The social impact data of the microgrid has been broken down into five categories shown by the tabs below. "),
                 html.P("As of February 2022, three Social Impact surveys have been conducted. "),
-                html.P("Baseline: August 2019"),
-                html.P("Microgrid Installed: July 2020"),
-                html.P("Survey 1: May 2021"),
-                html.P("Survey 2: February 2022"),
-                html.P("Survey 3: (planned) July 2022"),
+                html.P("- Baseline: August 2019"),
+                html.P("- Microgrid Installed: July 2020"),
+                html.P("- Survey 1: May 2021"),
+                html.P("- Survey 2: February 2022"),
+                html.P("- Survey 3: (planned) July 2022"),
                        
                 html.Br(),
                 html.Hr(),
@@ -1034,12 +1034,13 @@ def render_social_tabs(tab):
                     style={'fontSize':14}),
                 html.Hr(),
                
+ """              
                 dcc.Graph(id='H&E_graph_3', figure=fig_NoSchool),
                 html.Div(         
                     html.Dialog("Q: How many school aged children in your household do not go to school??"),
                     style={'fontSize':14}),
                 html.Hr(),
-               
+"""
                
                 ])
     elif tab == 'tab-4':
@@ -1061,13 +1062,13 @@ def render_social_tabs(tab):
                 html.Div(         
                     html.Dialog("Q: Overall, on a scale of 1 - 5, how secure do you feel your household's finances are??"),
                     style={'fontSize':14}),
-                html.P("This chart displays the average monthly incomes and expenditures of microgrid users."),
+                html.P("This chart displays the average monthly incomes and expenditures of microgrid users. However, income and expenditure levels are impacted by several wider factors, so the data cannot be directly linked to the microgrid. "),
                 html.P(" Tracking this indicator allows us to monitor is energy access is leading to any economic development in the town."),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='E&P_graph_3', figure=fig_FinancialSecurity),
                 html.P("This chart displays how financially secure microgrid users feel their household is."),
-                html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective."),   
+                html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective. However, income and expenditure levels are impacted by several wider factors, so the data cannot be directly linked to the microgrid. "),   
                 html.Hr(),
                 dcc.Graph(id='E&F_graph_4', figure=fig_Income),
                 html.Hr(),
