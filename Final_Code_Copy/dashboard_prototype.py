@@ -99,6 +99,7 @@ df_ER = pd.read_json(s)
 df_SmartphoneSatisfaction = pd.read_excel(os.path.join(APP_ROOT, r'AccessToSmartphones.xlsx'))
 df_NoSchool = pd.read_excel(os.path.join(APP_ROOT, r'Children_Not_School.xlsx'))
 df_StudyingHours = pd.read_excel(os.path.join(APP_ROOT, r'StudyingHours.xlsx'))
+df_HealthInfo = pd.read_excel(os.path.join(APP_ROOT, r'HealthInformationSource.xlsx'))
 
 # Employment and Finance # 
 df_Finances = pd.read_excel(os.path.join(APP_ROOT, r'Monthly_Finances.xlsx'))
@@ -166,6 +167,21 @@ def funct_SmartphoneSatisfaction(df):
             'Very Happy':'green'},
         range_y = [0,55],)
     return fig_SmartPhoneSatisfaction
+
+def funct_HealthInfo(df): 
+    sources    = df['Source of Information']
+    households = df['Households']
+    survey     = df['Survey']
+
+    fig_sources = px.bar(
+        df_HealthInfo,
+        title = 'Main Source for Accessing Health Information (Number of Households)',
+        x = sources,
+        y = households,
+        animation_frame = survey,
+        animation_group = sources,
+        range_y = [0,55])
+    return fig_HealthInfo
 
 # Employment and Finance #
 def funct_Finances(df):
@@ -446,6 +462,11 @@ fig_NoSchool.update_layout(title = "Number of School Aged Children not in Educat
 
 fig_SmartPhoneSatisfaction = funct_SmartphoneSatisfaction(df_SmartphoneSatisfaction)
 fig_SmartPhoneSatisfaction.update_layout(title = "Satisfaction of Access to Smartphones",
+               xaxis_title='Survey',
+               yaxis_title='Number of Households') 
+
+fig_HealthInfo = funct_HealthInfo(df_HealthInfo)
+fig_HealthInfo.update_layout(title = "Main Source for Accessing Health Information (Number of Households)",
                xaxis_title='Survey',
                yaxis_title='Number of Households') 
 
@@ -747,11 +768,11 @@ def render_page_content(pathname):
                 html.Hr(),
                 html.P("Social Impact data is the measure of how a product or service changes the lives of the people and community that uses it. The social impact data of the microgrid has been broken down into five categories shown by the tabs below. "),
                 html.P("As of February 2022, three Social Impact surveys have been conducted. "),
-                html.P("Baseline: August 2019"),
-                html.P("Microgrid Installed: July 2020"),
-                html.P("Survey 1: May 2021"),
-                html.P("Survey 2: February 2022"),
-                html.P("Survey 3: (planned) July 2022"),
+                html.P("- Baseline: August 2019"),
+                html.P("- Microgrid Installed: July 2020"),
+                html.P("- Survey 1: May 2021"),
+                html.P("- Survey 2: February 2022"),
+                html.P("- Survey 3: (planned) July 2022"),
                        
                 html.Br(),
                 html.Hr(),
@@ -1041,13 +1062,19 @@ def render_social_tabs(tab):
                     style={'fontSize':14}),
                 html.Hr(),
                
+                dcc.Graph(id='H&E_graph_4', figure=fig_HealthInfo),
+                html.Div(         
+                    html.Dialog("Q: Where do you get your healthcare information from? "),
+                    style={'fontSize':14}),
+                html.Hr(),
+               
+               """
                 dcc.Graph(id='H&E_graph_3', figure=fig_NoSchool),
                 html.Div(         
                     html.Dialog("Q: How many school aged children in your household do not go to school??"),
                     style={'fontSize':14}),
                 html.Hr(),
-               
-               
+               """
                 ])
     elif tab == 'tab-4':
         return html.Div([
@@ -1069,12 +1096,12 @@ def render_social_tabs(tab):
                     html.Dialog("Q: Overall, on a scale of 1 - 5, how secure do you feel your household's finances are??"),
                     style={'fontSize':14}),
                 html.P("This chart displays the average monthly incomes and expenditures of microgrid users."),
-                html.P(" Tracking this indicator allows us to monitor is energy access is leading to any economic development in the town."),   
+                html.P(" Tracking this indicator allows us to monitor is energy access is leading to any economic development in the town. However, income and expenditure levels are impacted by several wider factors, so the data cannot be directly linked to the microgrid. "),   
                 html.Hr(),
                 html.Br(),
                 dcc.Graph(id='E&P_graph_3', figure=fig_FinancialSecurity),
                 html.P("This chart displays how financially secure microgrid users feel their household is."),
-                html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective."),   
+                html.P(" Tracking this indicator provides insight both into economic development and into the affordability of the project from the community's perspective. However, income and expenditure levels are impacted by several wider factors, so the data cannot be directly linked to the microgrid. "),   
                 html.Hr(),
                 dcc.Graph(id='E&F_graph_4', figure=fig_Income),
                 html.Hr(),
