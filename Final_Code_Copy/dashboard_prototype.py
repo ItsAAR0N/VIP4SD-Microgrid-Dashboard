@@ -603,9 +603,6 @@ sidebar = html.Div(
         html.H1("Navigation"),
 
         html.Hr(),
-        html.P(
-            "Please use the below links to navigate the dashboard", className="lead"
-        ),
         dbc.Nav(
             [
                 dbc.NavLink("Home", href="/", active="exact", external_link=True),
@@ -613,8 +610,7 @@ sidebar = html.Div(
                 dbc.NavLink("Technical", href="/technical", active="exact", external_link=True),
                 dbc.NavLink("Social Impact", href="/social", active="exact", external_link=True),
                 dbc.NavLink("Maintenance", href="/maintenance", active="exact", external_link=True),
-                dbc.NavLink("Contact Us", href="/contactus", active="exact", external_link=True),
-                dbc.NavLink("Learn More", href = "https://www.sma-sunny.com/en/malawi-village-powered-with-microgrid/")
+                dbc.NavLink("Learn More", href = "/learnmore", active="exact", external_link=True)
             ],
             vertical=True,
             pills=True,
@@ -684,10 +680,12 @@ def render_page_content(pathname):
                 html.Br(),
                 html.Hr(),
                 html.Div(
-                    html.H3("Background Information"),style={'backgroundColor': '#FFFFFF', 'text-decoration': 'underline'}),
-                    html.P("This section is currently work in progress."),
+                    html.H3("Background Information"),style={'backgroundColor': '#FFFFFF'}),
                     html.P("Collecting and analysing data to understand microgrid performance is essential for informing effective maintenance schedules, business planning and technical designs for future microgrids. It can also inform policy interventions and help build a knowledgebase to accelerate the microgrid sector both nationally and globally. "),
-                    html.P("Commissioned in July 2020, the Mthembanji solar microgrid has been collecting data through smart meters and remote monitoring devices for over a year. An objective of EASE is to utilise project learning to inform the microgrid sector in Malawi, specifically through analysis and sharing of data."),
+                    html.P(["Mthembanji solar microgrid installed as part of the ",
+                           html.A("EASE",href="https://ease.eee.strath.ac.uk/") ,
+                           (" Project has been collecting data through smart meters, remote monitoring devices and social impact surveys since installation in July 2020. An objective of EASE is to utilise project learning to inform the microgrid sector in Malawi, specifically through analysis and sharing of data.")]),
+
                     html.H3("Why is Microgrid data important?"),
                     html.P("Many solar microgrid projects have faced sustainability challenges due to insufficient  maintenance or inefficient business models due to a lack of quality data collection and analysis. Microgrids that implement innovative smart metering and remote monitoring address these challenges, allowing developers to make informed decisions to ensure systems are operating  at optimum economic and technical efficiency in order to remain financially and practically viable. Analysing data also helps to fine-tune existing business models, by informing tariffs to ensure access to electricity is affordable for microgrid customers, while still maintaining sufficient income to be financially viable, offering confidence for potential investors. Perhaps most importantly, data analysis can help inform the technical design of other microgrids and therefore has the potential for impact on multiple sites."),
                     html.P("Data visualisation and sharing also enables funders, investors, researchers, and policymakers to monitor and understand microgrid performance, allowing use of the data to inform policy, investments, targeted research and other interventions in the microgrid enabling environment to accelerate their deployment.  In short, data analysis enables better informed and more efficient microgrid deployment, accelerating energy access and contributing to achieving SDG7."),
@@ -697,7 +695,7 @@ def render_page_content(pathname):
                     html.P(""),
                     html.P("Demand and Economic data:  relating the to the functionality of the generation and distribution systems, a variety of data on technical performance is being collected through remote monitoring of the PV, batteries and inverters, along with measurements and observations of the system collected through scheduled maintenance visits on site."),
                     html.P(""),
-                    html.P("Social Impact data:  A Key Performance Indicator framework is being used to track data relating to the impact the microgrid is having on the community, in themes such as health and education, employment and finance, and female empowerment. This data is collected through in person surveys and will be the subject of a separate blog. "),
+                    html.P("Social Impact data:  A Key Performance Indicator framework is being used to track data relating to the impact the microgrid is having on the community, in themes such as health and education, employment and finance, and female empowerment."),
 
                 html.Div(
                     html.Dialog("This dashboard aims to provide information on a pilot microgrid project in Mthembanji in Malawi. The key data to be displayed through this dashboard is the demand, technical, and social impact data. All of these key parameters provide invaluable information about the functioning of the microgrid along with its long-term feasibility and the direct impact which it has on the inhabitants in Mthembanji."),
@@ -786,29 +784,37 @@ def render_page_content(pathname):
                 ],),              
                 html.Div(id='maintenance_content'),
                 ]
-    elif pathname == "/contactus":
+    elif pathname == "/learnmore":
         return [
                 html.Div(
-                children = html.H1("Contact Us"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),
+                children = html.H1("Learn More"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center'}),
                 html.Hr(),
-                html.P("Below you may use any of the relevant emails to get in touch with us!"),
+                html.P("For questions or comments please get in touch - aran.eales@strath.ac.uk"),
+                html.P("On this page, you may find useful links where you can learn more about our microgrid in Malawi (part of the EASE project). We have also included links to numerous research articles that are relevant to our project."),
+                html.Hr(),
+                html.H2("EASE"),
+                html.P("Visit the EASE website if you would like to find out more about its outputs & outcomes as well as discover other cool projects similar to ours!"),
+                dbc.CardLink("EASE website", href="https://ease.eee.strath.ac.uk/"),
+                html.Hr(),
+                html.H2("Relevant Research"), 
+                html.P("Please Choose from the list below - you will be redirected to the relevant website"),
+                dbc.CardLink("Social Impact of Mini-grids: Monitoring, Evaluation and Learning by Aran Eales", href="https://www.researchgate.net/publication/329424742_Social_Impact_of_Mini-grids_Monitoring_Evaluation_and_Learning"),
                 html.Br(),
-                html.Hr(),  
-                html.P("VIP group coordinator:"), 
-                html.P("aran.eales@strath.ac.uk "),
                 html.Br(),
-                html.P("Demand Developer:"),
-                html.P("christopher.abi-aad.2020@uni.strath.ac.uk"),    
-                html.Br(),            
-                html.P("Technical Developer:"),
-                html.P("aaron.shek.2020@uni.strath.ac.uk"),   
-                html.Br(),                    
-                html.P("Social Impacts Developer:"), 
-                html.P("jack.kellet.2020@uni.strath.ac.uk"),  
+                dbc.CardLink("Assessing the market for solar photovoltaic (PV) microgrids in Malawi", href="https://pureportal.strath.ac.uk/en/publications/assessing-the-market-for-solar-photovoltaic-pv-microgrids-in-mala"),
                 html.Br(),
-                html.P("If you wish to make a general enquiry you may email the VIP group coordinator."),
-                html.Div(id='contactus'),
-                ]            
+                html.Br(),
+                dbc.CardLink(" Assessing the feasibility of solar microgrid social enterprises as an appropriate delivery model for achieving SDG7", href="https://pureportal.strath.ac.uk/en/publications/assessing-the-feasibility-of-solar-microgrid-social-enterprises-a"),
+                html.Br(),
+                html.Br(),
+                dbc.CardLink("Feasibility study for a solar PV microgrid in Malawi", href="https://pureportal.strath.ac.uk/en/publications/feasibility-study-for-a-solar-pv-microgrid-in-malawi"),
+                html.Hr(),
+                html.H2("Status, Barriers,and Opportunities"),
+                dbc.CardLink("Renewable Energy Mini-grids in Malawi: Status, Barriers and Opportunities", href="https://pureportal.strath.ac.uk/en/publications/feasibility-study-for-a-solar-pv-microgrid-in-malawi"),
+                html.Hr(),
+                html.P("We hope that these links are of good use to you and that you find what you're looking for. However, please do not hesitate to contact us if you would like more information!"),
+                html.Div(id='learnmore'),
+                ]           
     return dbc.Jumbotron(
         [
             html.H1("404: Not found", className="text-danger"),
@@ -3125,17 +3131,16 @@ def update_output_2(date_value,bttn1,bttn2):
      
     fig = go.Figure()
     
-    fig.add_trace(go.Scatter(x=time, y=monthly_usage,
-                                mode='lines+markers',
-                                ))
-            
-    fig.update_layout(title =Label + " Usage for " + User_Category + " customers for " + str(date),
-                           xaxis_title='Month',
-                           yaxis_title='Usage Amount (kWh)',
-                           yaxis_range=[0,max(monthly_usage)+0.02])
+    #######Extra code to plot data as a bar chart /// may be better alternative 
+    #######Extra code to plot data as a bar chart /// may be better alternative 
+    dff = pd.DataFrame(
+        {"Month" : time,
+         "Demand (kWh)" : monthly_usage,
+        })    
     
+    fig = px.bar(dff, x="Month", y="Usage", title = Label + " Demand for " + User_Category + " customers for " + str(date))
+        
     return fig
-
 
 @app.callback(
        Output(component_id='my_graph_5', component_property='figure'),
@@ -3473,12 +3478,4 @@ if __name__ == '__main__':
     app.run_server(debug=True)
 
 
-#######Extra code to plot data as a bar chart /// may be better alternative 
-#    dff = pd.DataFrame(
- #       {"Month" : time,
-  #       "Usage" : monthly_usage,
-   #     })    
-    
-    #fig = px.bar(dff, x="Month", y="Usage", title = "Load profile")
-    
-#    return fig F
+
