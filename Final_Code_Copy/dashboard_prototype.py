@@ -3171,7 +3171,7 @@ def update_output_2(date_value,bttn1,bttn2):
          "Demand (kWh)" : monthly_usage,
         })    
     
-    fig = px.bar(dff, x="Month", y="Usage", title = Label + " Demand for " + User_Category + " customers for " + str(date))
+    fig = px.bar(dff, x="Month", y="Demand (kWh)", title = Label + " Demand for " + User_Category + " customers for " + str(date))
         
     return fig
 
