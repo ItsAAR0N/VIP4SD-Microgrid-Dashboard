@@ -830,8 +830,8 @@ def render_page_content(pathname):
                 html.Br(),
                 html.Br(),
                 dbc.CardLink("Feasibility study for a solar PV microgrid in Malawi", href="https://pureportal.strath.ac.uk/en/publications/feasibility-study-for-a-solar-pv-microgrid-in-malawi"),
-                html.Hr(),
-                html.H2("Status, Barriers,and Opportunities"),
+                html.Br(),
+                html.Br(),
                 dbc.CardLink("Renewable Energy Mini-grids in Malawi: Status, Barriers and Opportunities", href="https://pureportal.strath.ac.uk/en/publications/feasibility-study-for-a-solar-pv-microgrid-in-malawi"),
                 html.Hr(),
                 html.P("We hope that these links are of good use to you and that you find what you're looking for. However, please do not hesitate to contact us if you would like more information!"),
@@ -3571,6 +3571,7 @@ def BatStateofChargeMonth(slct_user_5):
     Output("download-file", "data"),
     Input("file", "n_clicks"),
     prevent_initial_call=True,
+    
 )
 def func(n_clicks):
     print(APP_ROOT, r'SOP-011_Site_Visit_Maintenance_Report.docx')
