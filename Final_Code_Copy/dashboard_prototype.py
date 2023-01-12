@@ -5,6 +5,7 @@
 Created on Thu Feb 11 15:53:26 2021
 @original author: heatherwaddell
 @pre existing author(s): aaron,chris,jack
+@current author(s): ian,jamie,adam,ruaridh
 
 """
 import os # find current file directory
@@ -31,9 +32,11 @@ import time
 import xlsxwriter
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, dbc.icons.BOOTSTRAP],suppress_callback_exceptions=True) 
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.COSMO, dbc.icons.BOOTSTRAP],suppress_callback_exceptions=True) 
 server = app.server
 # CERULEAN, COSMO, CYBORG, DARKLY, FLATLY, JOURNAL, LITERA, LUMEN, LUX, MATERIA, MINTY, MORPH, PULSE, QUARTZ, SANDSTONE, SIMPLEX, SKETCHY, SLATE, SOLAR, SPACELAB, SUPERHERO, UNITED, VAPOR, YETI, ZEPHYR.
+#Original = LUX
+#fav = COSMO, ZEPHYR
 session=requests.Session()
 
 
@@ -700,6 +703,21 @@ r = requests.get(url=url, headers = header)
 s = r.content
 df = pd.read_json(s)
 
+# Request from the first URL
+url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time
+r1 = requests.get(url=url1, headers = header)
+s1 = r1.content
+df1 = pd.read_json(s1)
+
+# Request from the second URL
+url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time
+r2 = requests.get(url=url2, headers = header)
+s2 = r2.content
+df2 = pd.read_json(s2)
+
+# Combine the two datasets
+df = pd.concat([df1, df2], ignore_index=True)
+
 if(len(df)==0):
     print("There have been no transactions in the last 30 days.")
 else:
@@ -831,7 +849,7 @@ def render_page_content(pathname):
     if pathname == "/":
         return [
                 html.Div(
-                children = html.P("Mthembanji Microgrid Dashboard"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center','fontSize': 44}),
+                children = html.P("Malawi Microgrid Dashboard"),style={'backgroundColor': '#f2f2f2', 'textAlign': 'center','fontSize': 44}),
                 html.Div([
                 ], style={'textAlign': 'center'}),
                 html.Hr(),
@@ -1047,11 +1065,11 @@ def render_tech_tabs_1(tab): # =================================================
                 html.H2("Total Generation of Microgrid"),
                 html.P("Please select a date:"),
                 dcc.DatePickerSingle(
-                id='my-date-picker-single-gen',
-                min_date_allowed=date(2020, 6, 5),
-                max_date_allowed=date(C_year, C_month, C_day),
-                initial_visible_month=date(C_year, C_month, C_day),
-                date=date(C_year, C_month, C_day)
+                    id='my-date-picker-single-gen',
+                    min_date_allowed=date(2020, 6, 5),
+                    max_date_allowed=date(C_year, C_month, C_day),
+                    initial_visible_month=date(C_year, C_month, C_day),
+                    date=date(C_year, C_month, C_day)
             ),  
                 html.Br(),
                 html.Button("Click to download spreadsheet", id="generation-day-file"),
@@ -1060,7 +1078,7 @@ def render_tech_tabs_1(tab): # =================================================
                 html.P("This chart displays the total generation (energy balance)."),
                 html.P("This key data indicator shows when the system is generating most power, and the least power respectively. As indicitive of this graph, it would suggest the peak generation is around the early mornings of 9am, before levelling off during the day."),           
                 html.H6("Please Select a Year: "),# New quality of life improvements
-                dcc.RadioItems(id = 'slct_user_3',
+                dcc.RadioItems(id = 'slct_user_3_1',
                 options=[
                     {'label': '2022', 'value': 2022},
                     {'label': '2021', 'value': 2021},
@@ -1068,7 +1086,7 @@ def render_tech_tabs_1(tab): # =================================================
                 ],
                 value=2022,
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
-            ), 
+                ), 
                 html.Br(),
                 html.Button("Click to download spreadsheet", id="generation-year-file"),
                 dcc.Download(id="download-generation-year-file"),                
@@ -1155,7 +1173,7 @@ def render_tech_tabs_1(tab): # =================================================
             html.H6("Please Select a Date:"),
             dcc.DatePickerSingle(
                 id='my-date-picker-single-2',
-                min_date_allowed=date(2022, 3, 9),
+                min_date_allowed=date(2020, 6, 5),
                 max_date_allowed=date(C_year, C_month, C_day),
                 initial_visible_month=date(C_year, C_month, C_day),
                 date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
@@ -1183,7 +1201,7 @@ def render_tech_tabs_1(tab): # =================================================
                      placeholder="Select a year",
                      searchable = False,
                      multi=False,
-                     value=C_year,
+                     value=str(C_year),
                      style={'width': "40%"}
                      ),
                 html.Br(),
@@ -1212,7 +1230,7 @@ def render_tech_tabs_1(tab): # =================================================
                 html.H6("Please select start (left) and end (right) date: "),
                 dcc.DatePickerRange(
                     id='my-date-picker-range',
-                    min_date_allowed=date(2022, 2, 1),
+                    min_date_allowed=date(2020, 6, 5),
                     max_date_allowed=date(C_year, C_month, C_day),
                     initial_visible_month=date(C_year, C_month, C_day),
                     start_date=date(C_year, C_month-1, 1), 
@@ -1242,7 +1260,7 @@ def render_tech_tabs_1(tab): # =================================================
                      placeholder="Select a year",
                      searchable = False,
                      multi=False,
-                     value=C_year,
+                     value=str(C_year),
                      style={'width': "40%"}
                      ),
                 html.Br(),
@@ -1264,7 +1282,7 @@ def render_tech_tabs_1(tab): # =================================================
                      placeholder="Select a year",
                      searchable = False,
                      multi=False,
-                     value=C_year,
+                     value=str(C_year),
                      style={'width': "40%"}
                      ),
                 html.Br(),
@@ -1286,7 +1304,7 @@ def render_tech_tabs_1(tab): # =================================================
                      placeholder="Select a year",
                      searchable = False,
                      multi=False,
-                     value=C_year,
+                     value=str(C_year),
                      style={'width': "40%"}
                      ),
                 html.Br(),
@@ -1311,7 +1329,7 @@ def render_tech_tabs_1(tab): # =================================================
                      placeholder="Select a year",
                      searchable = False,
                      multi=False,
-                     value=C_year,
+                     value=str(C_year),
                      style={'width': "40%"}
                      ),
                 html.Br(),
@@ -1580,31 +1598,44 @@ def render_social_tabs(tab):
 #                 html.Hr(),
 #                 ])
 
+#============================DEMAND TABS================================
+
 @app.callback(
         Output('tabs-example-content', 'children'),
         Input('tabs-example', 'value'))
 
 def render_content(tab):
+#===TAB 1 (Revenue Data) 
     if tab == 'tab-1':
         return html.Div([
             html.Hr(),
             html.H2("Monthly Revenue for Given Year"),
-            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_1_1',
+                options=[
+                    {'label': 'Mthembanji', 'value': 2},
+                    {'label': 'Kudembe', 'value': 3},
+                ],
+                value = 2,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
             html.H6("Please Select a Year: "),# New quality of life improvements
-            dcc.Dropdown(id="slct_year",
-                     options=[
-                         {"label": "2020", "value": "2020"},
+            dcc.Dropdown(id="slct_year_1_1",
+                options=[{"label": "2020", "value": "2020"},
                          {"label": "2021", "value": "2021"},
                          {"label": "2022", "value": "2022"},
+                         {"label": "2023", "value": "2023"},
                          ],
-                     placeholder="Select a year",
-                     searchable = False,
-                     multi=False,
-                     value=C_year,
-                     style={'width': "40%"}
-                     ),
+                placeholder="Select a year",
+                searchable = False,
+                multi=False,
+                value=str(C_year),
+                style={'width': "40%"}
+            ),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user_1',
+            dcc.RadioItems(id = 'slct_user_1_1',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -1625,6 +1656,7 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),]),
             html.Br(),
+            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
             html.Button("Click to download spreadsheet", id="revenue-file"),
             dcc.Download(id="download-revenue-file"),
             dcc.Graph(id='my_graph_1', figure={}),
@@ -1660,25 +1692,38 @@ def render_content(tab):
             html.Br(),
             html.Hr(),
         ])
+#===TAB2 (Monthly Demand)
     elif tab == 'tab-2':
         return html.Div([            
             html.Hr(),
             html.H2("Monthly Demand for Given Year"),
-            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_2_1',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value = 1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
             html.H6("Please Select a Year: "),# New quality of life improvements
             dcc.Dropdown(id="slct_year",
                      options=[
                          {"label": "2020", "value": "2020"},
                          {"label": "2021", "value": "2021"},
-                         {"label": "2022", "value": "2022"}],
+                         {"label": "2022", "value": "2022"},
+                         {"label": "2023", "value": "2023"}
+                         ],
                      placeholder="Select a year",
                      searchable = False,
-                     multi=False,
-                     value=C_year,
-                     style={'width': "40%"}
+                     multi = False,
+                     value = str(C_year),
+                     style = {'width': "40%"}
                      ),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user_4',
+            dcc.RadioItems(id = 'slct_user_2_1',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -1689,7 +1734,7 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
             html.Br(),
-            dcc.RadioItems(id = 'TorU_4',
+            dcc.RadioItems(id = 'TorU_2_1',
                 options=[
                     {'label': 'Total', 'value': 1},
                     {'label': 'Average', 'value': 2},
@@ -1698,6 +1743,7 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
             html.Br(),
+            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
             html.Br(),
             html.Button("Click to download spreadsheet", id="month-demand-file"),
             dcc.Download(id="download-month-demand-file"),
@@ -1735,12 +1781,38 @@ def render_content(tab):
             html.Br(),
             html.Hr(),            
         ])
+#===TAB3 (Load Profiles) 
     elif tab == 'tab-3':
         return html.Div([
             html.Hr(),
             html.H2("Load Profile for a Full Year"),
             html.Br(),
-            dcc.RadioItems(id = 'slct_user_3',
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_3_1',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value=1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
+            html.H6("Please Select a Year: "),# New quality of life improvements
+            dcc.Dropdown(id="slct_year_3_1",
+                     options=[
+                         {"label": "2020", "value": "2020"},
+                         {"label": "2021", "value": "2021"},
+                         {"label": "2022", "value": "2022"},
+                         {"label": "2023", "value": "2023"}
+                         ],
+                     placeholder="Select a year",
+                     searchable = False,
+                     multi = False,
+                     value = str(C_year),
+                     style = {'width': "40%"}
+                     ), 
+            html.Br(),
+            dcc.RadioItems(id = 'slct_user_3_1',
                 options=[
                     {'label': 'All Users', 'value': 1},
                     {'label': 'Residential', 'value': 2},
@@ -1756,17 +1828,26 @@ def render_content(tab):
             dcc.Graph(id = 'load_profile_year', figure = {}),
             html.P("This graph displays the mean, median, 75 %tile, and 25% tile for a single customer over a full year (8760 hourly data points). It is possible to view data for all customers as well as seggregated data for each customer category. The data shown was recorded from the 5th of July 2021 to the 5th of July 2022. The 8760 spreadsheet can be downloaded to view more data which is described within the 'ReadMe' sheet."),
             html.Hr(),
+
             html.H2("Microgrid Load Profile for Given Day"),
-            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_3_2',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value=1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
             html.H6("Please Select a Date:"),
-            dcc.DatePickerSingle(
-                id='my-date-picker-single',
+            dcc.DatePickerSingle(id = 'my-date-picker-single',
                 min_date_allowed=date(2020, 6, 5),
                 max_date_allowed=date(C_year, C_month, C_day),
                 initial_visible_month=date(C_year, C_month, C_day),
-                date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
-                # more user friendly
-            ),
+                date=date(C_year, C_month, C_day),
+                display_format='DD/MMM/YYYY'),
             html.Br(),
             html.Br(),
             dcc.RadioItems(id = 'slct_user_2',
@@ -1788,6 +1869,8 @@ def render_content(tab):
                 value=1,
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
+            html.Br(),
+            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
             html.Br(),
             html.Button("Click to download spreadsheet", id="day-profile-file"),
             dcc.Download(id="download-day-profile-file"),            
@@ -1826,7 +1909,16 @@ def render_content(tab):
             html.Hr(),
 
             html.H2("Microgrid Load Profile for Given Range"),
-            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_3_3',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value=1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ), 
             html.Br(),
             html.H6("Please select start (left) and end (right) date: "),
             dbc.Alert([html.I(className="bi bi-exclamation-circle-fill")," Invalid Range! Please select range that is over 1 day and less than 40 days."],id='range_alert',color= 'danger',class_name="d-flex align-items-center", is_open = False, duration = 3000),
@@ -1835,10 +1927,9 @@ def render_content(tab):
                 min_date_allowed=date(2020, 6, 5),
                 max_date_allowed=date(C_year, C_month, C_day),
                 initial_visible_month=date(C_year, C_month, C_day),
-                start_date=date(C_year, C_month-1, 1), # Display previous month days as an example to get started
-                end_date=date(C_year, C_month-1, 12) # Changed so it selects current day, previously it was set to June the 5th 2020
-                # more user friendly
-                ),
+                start_date=date(C_year, C_month, 1),
+                end_date=date(C_year, C_month, C_day),
+                display_format='DD/MMM/YYYY'),
             html.Br(),            
             html.Br(),
             dcc.RadioItems(id = 'TorU',
@@ -1861,6 +1952,8 @@ def render_content(tab):
                 inputStyle={"margin-left": "15px", "margin-right":"5px"}
             ),
             html.Br(),
+            html.P("Please allow up to 15 seconds for graphs to load when viewing data for residential and business users."),
+            html.Br(),
             html.Button("Click to download spreadsheet", id="range-profile-file"),
             dcc.Download(id="download-range-profile-file"),
             dcc.Graph(id = 'my_av_load_graph', figure={}),
@@ -1870,20 +1963,30 @@ def render_content(tab):
             html.Br(),
             html.Hr()
         ])
+#===TAB4 (Peak Load Data)    
     elif tab == 'tab-4':
         return html.Div([
             html.Br(),
             html.Hr(),
             html.H2("Peak Loads for Given Month"),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_4_1',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value=1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
             html.H6("Please Select a Month: "),     
-            dcc.DatePickerSingle(
-                id='my-date-picker-single-5',
-                min_date_allowed=date(2020, 6, 5),
+            dcc.DatePickerSingle(id = 'my-date-picker-single-5',
+                min_date_allowed=date(2022, 9, 21),
                 max_date_allowed=date(C_year, C_month, C_day),
                 initial_visible_month=date(C_year, C_month, C_day),
-                date=date(C_year, C_month, C_day) # Changed so it selects current day, previously it was set to June the 5th 2020
-                # more user friendly
-            ),
+                date=date(C_year, C_month, C_day),
+                display_format='MMM/YYYY'),
             html.Br(),
             html.Br(),
             html.Button("Click to download spreadsheet", id="month-peak-file"),
@@ -1891,19 +1994,32 @@ def render_content(tab):
             dcc.Graph(id = 'my_peak_graph', figure={}),
             html.Br(),
             html.Hr(),
+
             html.H2("Peak Load for Given Year"),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_4_2',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value=1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
             html.H6("Please Select a Year: "),# New quality of life improvements
-            dcc.Dropdown(id="slct_year",
-                     options=[
-                         {"label": "2020", "value": 2020},
-                         {"label": "2021", "value": 2021},
-                         {"label": "2022", "value": 2022}],
-                     placeholder="Select a year",
-                     searchable = False,
-                     multi=False,
-                     value=C_year,
-                     style={'width': "40%"}
-                     ),
+            dcc.Dropdown(id="slct_year_4_2",
+                options=[{"label": "2020", "value": "2020"},
+                         {"label": "2021", "value": "2021"},
+                         {"label": "2022", "value": "2022"},
+                         {"label": "2023", "value": "2023"},
+                         ],
+                placeholder="Select a year",
+                searchable = False,
+                multi=False,
+                value=str(C_year),
+                style={'width': "40%"}
+            ),
             html.Br(),
             html.Br(),
             html.Button("Click to download spreadsheet", id="year-peak-file"),
@@ -1915,22 +2031,23 @@ def render_content(tab):
         html.P("The charts above display the daily peak loads for the whole system throughout a given month or year."),
         html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day or month. This enables easy analysis of how much the peak load amount varies throughout the given time period. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month/year. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system."),
         ])
+#===TAB 5 (Connection Status) xxx
     elif tab == 'tab-5':
             numOn = 0
             numOff = 0
-            
 
             #grabbing the connection status data from the url
-            url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
+            url_mth = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=60"
+            url_kud = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=60"
             
-            r = requests.get(url=url, headers = header)
+            r = requests.get(url=url_mth, headers = header)
             s = r.content
             #converting json string to a panda object
-            dfC = pd.read_json(s)
+            dfC_mth = pd.read_json(s)
             
             #in the range of 0 and the no of customers (items) in the object
-            for index in range(0,len(dfC['count'])):
-                holder = dfC['results'][index]
+            for index in range(0,len(dfC_mth['count'])):
+                holder = dfC_mth['results'][index]
             #if the connection is on, add one to the on  counter
                 if(holder['status'] == "on"):
                     numOn += 1
@@ -1940,20 +2057,24 @@ def render_content(tab):
                 elif(holder['status'] == "none"):
                     continue
                 
-            status = ['On', 'Off'] 
-            data = [numOn, numOff]
+            status_mth = ['On', 'Off'] 
+            data_mth = [numOn, numOff]
             
-            fig = px.pie(values=data, names=status)
+            fig_mth = px.pie(values=data_mth, names=status_mth)
             return html.Div([
                     html.Br(),
                     html.Hr(),
                     html.H2('Current Connection Status'),
-                    dcc.Graph(id="pie-chart", figure = fig),
+                    dcc.Graph(id="pie-chart", figure = fig_mth),
+                    html.Br(),
+                    html.Hr(),
+
                     html.P("This pie chart displays the current percentage of customers who have an active connection (ON) or have their connection disabled (OFF)."),
                     html.P("This is useful data to have as it enables easy establishment of the percentage of customers who are actually using their connection at this given moment and hence, provides some insight into how useful the microgrid is and what percentage of customers are actually using it."),
                     html.Br(),
                     html.Hr(),
-        ])
+            ])
+
     elif tab == 'tab-6':
         return html.Div([
             html.Br(),
@@ -2426,21 +2547,32 @@ def update_cust_on_day_graph(date_value, cust_name):
     return fig
     
 @app.callback(
+    [Output('my-date-picker-range-3', 'min_date_allowed'),
+    Output('my-date-picker-range-3', 'date')],
+    [Input('slct_grid_3_3', 'value')]
+    )
+def update_date_picker(value):
+    if value == 1:
+        return date(2020, 6, 5), date(C_year, C_month, C_day)
+    elif value == 2:
+        return date(2022, 9, 21), date(C_year, C_month, C_day)
+
+@app.callback(
     Output(component_id='my_av_load_graph', component_property='figure'),
     Output('range_alert','is_open'),
     [Input(component_id='my-date-picker-range-3', component_property='start_date'),
      Input('my-date-picker-range-3','end_date'),
+     Input('slct_grid_3_3', 'value'),
      Input('slct_user_av', 'value'),
      Input('TorU','value')],
     [State('range_alert','is_open')])
 
 
-def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open):
+def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is_open):
+    
+    site=site
     date = str(start_date_value)
     date2=str(end_date_value)
-    
-    
-    
     div=bttn1
     div2 = bttn2
     
@@ -2479,7 +2611,10 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
     end_time = str(date2) + "-01T00:00:00"
     
     #request to customer list
-    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
+    if(site == 1):
+        url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=60"
+    elif(site == 2):
+        url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=50"
             
     r = requests.get(url=url, headers = header)
     s = r.content
@@ -2529,8 +2664,10 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
     if (div==1):
         U="All Users"
         count = len(all_cust_fnames)
-        url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
-            
+        if(site == 1):
+            url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+        elif(site == 2):
+            url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
         r2 = requests.get(url=url, headers = header)
         s2 = r2.content
         df2 = pd.read_json(s2)
@@ -2694,18 +2831,31 @@ def update_av_load_graph(start_date_value, end_date_value, bttn1, bttn2,is_open)
     return fig, is_open
     
     return fig
-            
+
+@app.callback(
+    [Output('my-date-picker-single-5', 'min_date_allowed'),
+    Output('my-date-picker-single-5', 'date')],
+    [Input('slct_grid_4_1', 'value')]
+    )
+def update_date_picker(value):
+    if value == 1:
+        return date(2020, 6, 5), date(C_year, C_month, C_day)
+    elif value == 2:
+        return date(2022, 9, 21), date(C_year, C_month, C_day)
+         
 @app.callback(
     Output(component_id='my_peak_graph', component_property='figure'),
     Input(component_id='my-date-picker-single-5', component_property='date'),
-)
+    Input('slct_grid_4_1', 'value'))
 
-def update_peak_graph(date_value):
+def update_peak_graph(date_value, site):
     
     date = str(date_value)
     month = date[5:7]
+    site = site
     
     start_time = str(date) + "-01T00:00:00"
+    site_name = " "
 
 
     if(int(date[5:7])==12):
@@ -2718,8 +2868,13 @@ def update_peak_graph(date_value):
     
     #Changing the start time so that only month and year included so that start time is the start of the month
     start_time = str(date[0:7]) + "-01T00:00:00"    
-                               
-    url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+
+    if(site == 1):
+        url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+        site_name = "Mthembanji"
+    elif(site == 2):
+        url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time 
+        site_name = "Kudembe"                          
     r = requests.get(url=url, headers = header)
     s = r.content
     df = pd.read_json(s)
@@ -2769,8 +2924,8 @@ def update_peak_graph(date_value):
         fig.add_trace(go.Scatter(x=x_dont_care, y=y_dont_care,
                             mode='lines+markers',
                             ))
-            
-        fig.update_layout(title = "Peak Loads for " + str(M) + " " + str(date[0:4]),
+ 
+        fig.update_layout(title = "Peak Loads for " + str(M) + " " + str(date[0:4]) + " (" + str(site_name) + ")",
                           xaxis_title='Date',
                           yaxis_title='Peak Demand (kWh)')  
         return fig
@@ -2846,14 +3001,34 @@ def update_peak_graph(date_value):
                           xaxis_range=[1,num],
                           yaxis_range=[-0.02,max(peaks)+0.02])
         return fig
-    
+
+@app.callback(
+    Output('slct_year_4_2', 'options'),
+    [Input('slct_grid_4_2', 'value')])
+def update_dropdown(slct_grid_4_2):
+    if slct_grid_4_2 == 1:
+        return [
+            {"label": "2020", "value": "2020"},
+            {"label": "2021", "value": "2021"},
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+    else:
+        return [
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+
 @app.callback(
     Output(component_id='my_peak_graph_2', component_property = 'figure'),
-    Input(component_id='slct_year', component_property ='value'))
+    Input(component_id ='slct_year_4_2', component_property ='value'),
+    Input('slct_grid_4_2', 'value'))
 
-def update_peak_graph_2(date):
-    
+def update_peak_graph_2(date, site):
+
     date = str(date)
+    site = site
+    site_name = ""
     
     start_time = str(date) + "-01-01T00:00:00"
     end_time = str(int(date)+1) + "-01-01T00:00:00" 
@@ -2862,7 +3037,11 @@ def update_peak_graph_2(date):
     time = ["January","February","March","April","May","June","July","August","September","October","November","December"]  
     usage = []
     
-    url= "https://api.steama.co/sites/26385/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
+    if(site == 1):
+        site_name = "Mthembanji"
+        url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+    elif(site == 2):
+        url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
 
     r = requests.get(url, headers = header)
     s = r.content
@@ -2883,7 +3062,7 @@ def update_peak_graph_2(date):
         max_value = max(temp)
         peaks.append(max_value)
         
-    title = "Peak Loads for " + str(start_time[0:4])
+    title = "Peak Loads for " + str(start_time[0:4]) + " " + str(site_name)
     
     FillSpreadSheet(title, "Month", "Peak Demand (kWh)", time, peaks, "Peaks_Year")    
     
@@ -2902,18 +3081,37 @@ def update_peak_graph_2(date):
                         dtick = 1),
                         yaxis_range=[-0.02,max(peaks)+0.02])
     return fig
+
+@app.callback(
+    Output('slct_year_1_1', 'options'),
+    [Input('slct_grid_1_1', 'value')])
+def update_dropdown(slct_grid_1_1):
+    if slct_grid_1_1 == 3:
+        return [
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+    else:
+        return [
+            {"label": "2020", "value": "2020"},
+            {"label": "2021", "value": "2021"},
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+
 @app.callback(
     Output(component_id='my_graph_1', component_property='figure'),
-    [Input(component_id='slct_year', component_property='value'),
-     Input('slct_user_1','value'),
-     Input('TorA','value')])
+    [Input(component_id='slct_year_1_1', component_property='value'),
+     Input('slct_user_1_1','value'),
+     Input('TorA','value'),
+     Input('slct_grid_1_1','value')])
 
-def update_graph(option_slctd, bttn1, bttn2):
+def update_graph(option_slctd, bttn1, bttn2, site):
     
-    
-    div=bttn1
+    div = bttn1
     div2 = bttn2
-    
+    site = site
+
     if(div2==1):
         T = "Total Revenue "
         L = "Total Revenue (USD)"
@@ -2946,10 +3144,9 @@ def update_graph(option_slctd, bttn1, bttn2):
 
     start_time = str(date) + "-01-01T00:00:00"
     end_time = str(int(date)+1) + "-01-01T00:00:00" 
-    
    
     #request to customer list
-    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
+    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=110"
             
     r = requests.get(url=url, headers = header)
     s = r.content
@@ -3008,16 +3205,54 @@ def update_graph(option_slctd, bttn1, bttn2):
     #This is to ensure that the timestamp array does not have 0s
     #This can occur if that last get request is to a customer that has missing timestamp readings
     #This link however does not have missing timestamps
-    site_url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time                      
-    rT = requests.get(url=site_url, headers = header)
-    sT = rT.content
-    dfT = pd.read_json(sT)
+    if(site == 1):
+        site_url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        site_url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        rT1 = requests.get(url=site_url1, headers = header)                     
+        sT1 = rT1.content
+        dfT1 = pd.read_json(sT1)
+
+        rT2 = requests.get(url=site_url2, headers = header)                     
+        sT2 = rT2.content
+        dfT2 = pd.read_json(sT2)
+
+        dfT = pd.concat([dfT1, dfT2])
+        #dfT = pd.concat([dfT1, dfT2], axis = 0, join='outer')
+    elif(site == 2):
+        site_url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
+        rT = requests.get(url=site_url, headers = header)
+        sT = rT.content
+        dfT = pd.read_json(sT)
+    elif(site == 3):
+        site_url = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        rT = requests.get(url=site_url, headers = header) 
+        sT = rT.content
+        dfT = pd.read_json(sT)                    
     
     if (div==1):
-        url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time                      
-        r = requests.get(url=url, headers = header)
-        s = r.content
-        df = pd.read_json(s)
+        if(site == 1):
+            url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+            url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+            r1 = requests.get(url=url1, headers = header)                     
+            s1 = r1.content
+            df1 = pd.read_json(s1)
+
+            r2 = requests.get(url=url2, headers = header)                     
+            s2 = r2.content
+            df2 = pd.read_json(s2)
+
+            df = pd.concat([df1, df2])
+            #df = pd.concat([df1, df2], axis = 0, join='outer')
+        elif(site == 2):
+            url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
+            r = requests.get(url=url, headers = header)
+            s = r.content
+            df = pd.read_json(s)
+        elif(site == 3):
+            url = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time  
+            r = requests.get(url=url, headers = header) 
+            s = r.content
+            df = pd.read_json(s)                   
         
         for index in range(0,len(df['timestamp'])):
             if (div2==1):
@@ -3057,11 +3292,29 @@ def update_graph(option_slctd, bttn1, bttn2):
                 nth_day = convert_nth_day(df2['timestamp'][index])
                 take_away_revenue[nth_day - 1 ]+=(df2['revenue'][index])
       
-        
-        url3 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time                      
-        r3 = requests.get(url=url3, headers = header)
-        s3 = r3.content
-        df3 = pd.read_json(s3)
+        if(site == 1):
+            url31 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+            url32 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+            r31 = requests.get(url=url31, headers = header)                     
+            s31 = r31.content
+            df31 = pd.read_json(s31)
+
+            r32 = requests.get(url=url32, headers = header)                     
+            s32 = r32.content
+            df32 = pd.read_json(s32)
+
+            dfT = pd.concat([df31, df32])
+            #df3 = pd.concat([df31, df32], axis = 0, join='outer')
+        elif(site == 2):
+            url3 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
+            r3 = requests.get(url=url3, headers = header)
+            s3 = r3.content
+            df3 = pd.read_json(s3)
+        elif(site == 3):
+            url3 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
+            r3 = requests.get(url=url3, headers = header)   
+            s3 = r3.content
+            df3 = pd.read_json(s3)                   
         
         for index in range(0,len(df3['timestamp'])):
             total_daily_revenue[index]+=df3['revenue'][index]
@@ -3178,14 +3431,29 @@ def update_graph(option_slctd, bttn1, bttn2):
 
 # Callback due to changing inputs (user selecting options)
 # Inputs are - user selecting date + user category + Total/Average
+
+@app.callback(
+    [Output('my-date-picker-single', 'min_date_allowed'),
+    Output('my-date-picker-single', 'date')],
+    [Input('slct_grid_3_2', 'value')]
+    )
+def update_date_picker(value):
+    if value == 1:
+        return date(2020, 6, 5), date(C_year, C_month, C_day)
+    elif value == 2:
+        return date(2022, 9, 21), date(C_year, C_month, C_day)
+
 @app.callback(
     Output(component_id='my_graph_2', component_property='figure'),
     [Input(component_id='my-date-picker-single', component_property='date'),
-     Input('slct_user_2','value'),Input('TorU_2','value')])
+     Input('slct_grid_3_2','value'),    #Select which grid to work with
+     Input('slct_user_2','value'), 
+     Input('TorU_2','value')])
 
-def update_output(date_value, bttn1, bttn2):
+def update_output(date_value, site, bttn1, bttn2):
     
     #Stores value of radioitem - allows checking what option is selected
+    site = site
     div = bttn1
     div2 = bttn2
     
@@ -3224,7 +3492,7 @@ def update_output(date_value, bttn1, bttn2):
                 end_time = date[0:8] + str(int(date[8:10])+1) + "T00:00:00"
                                                     
     #request to customer list
-    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
+    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=110"
             
     r = requests.get(url=url, headers = header)
     s = r.content
@@ -3270,7 +3538,12 @@ def update_output(date_value, bttn1, bttn2):
    
     if(div==1):
         T = "All Users "
-        url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+        #Select the API for the correct site
+        if (site == 1):
+            url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+        elif (site == 2):
+            url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+
         r = requests.get(url=url, headers = header)
         s = r.content
         df2 = pd.read_json(s)
@@ -3431,10 +3704,12 @@ def update_output(date_value, bttn1, bttn2):
 
 @app.callback(
     Output(component_id='load_profile_year', component_property='figure'),
-    [Input('slct_user_3','value')])
+    [Input('slct_user_3_1','value'),
+    Input('slct_grid_3_1','value')])
 
-def Load_year(bttn):
-    div=bttn
+def Load_year(bttn, site):
+    site = site
+    div = bttn
     
     df = pd.read_excel('read.xlsx')
     
@@ -3499,39 +3774,59 @@ def Load_year(bttn):
 #Main differences include array size as well as sorting the daily readings into monthly readings
 
 @app.callback(
+    Output('slct_year', 'options'),
+    [Input('slct_grid_2_1', 'value')])
+def update_dropdown(slct_grid_2_1):
+    if slct_grid_2_1 == 1:
+        return [
+            {"label": "2020", "value": "2020"},
+            {"label": "2021", "value": "2021"},
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+    else:
+        return [
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+
+@app.callback(
     Output(component_id='my_graph_4', component_property='figure'),
     [Input(component_id='slct_year', component_property='value'),
-     Input('slct_user_4','value'),Input('TorU_4', 'value')])
+     Input('slct_user_2_1','value'),
+     Input('TorU_2_1', 'value'),
+     Input('slct_grid_2_1','value')])
 
-def update_output_2(date_value,bttn1,bttn2):
+def update_output_2(date_value, bttn1, bttn2, site):
     
     #storing year selected by user - string
-    date=date_value 
+    date = date_value 
     #formatting date for get request
     start_time = str(date) + "-01-01T00:00:00"
     end_time = str(int(date)+1) + "-01-01T00:00:00"
     
     div = bttn1
-    div2=bttn2
+    div2 = bttn2
+    site = site
     
     #Changing variable based on option selected - to be used in title
-    if (div==1):
+    if (div == 1):
         User_Category = "All Users"
-    elif (div==2):
+    elif (div == 2):
         User_Category = "Residential Users"
-    elif (div==3):
+    elif (div == 3):
         User_Category = "Business Users"
     else:
         User_Category = "Institutional Users"
         
-    if (div2==1):
+    if (div2 == 1):
         Label = "Total"
     else:
         Label="Average"
     
-    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=100"
+    url = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=110"
             
-    r = requests.get(url=url, headers = header)
+    r = requests.get(url = url, headers = header)
     s = r.content
     #converting json string to a panda object
     dfC = pd.read_json(s)
@@ -3581,8 +3876,12 @@ def update_output_2(date_value,bttn1,bttn2):
     count=0
     
     if (div==1):
-        url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
-        r = requests.get(url=url, headers = header)
+        if(site == 1):
+            url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+        elif(site == 2):
+            url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+
+        r = requests.get(url = url, headers = header)
         s = r.content
         df2 = pd.read_json(s)
       
@@ -3601,7 +3900,7 @@ def update_output_2(date_value,bttn1,bttn2):
             
             url = "https://api.steama.co/customers/?last_name=" + surname + "&first_name=" + first_name
                 
-            r = requests.get(url=url, headers = header)
+            r = requests.get(url = url, headers = header)
             s = r.content
             df = pd.read_json(s)
             holder = df['results'][0]
@@ -3622,9 +3921,13 @@ def update_output_2(date_value,bttn1,bttn2):
                 nth_day = convert_nth_day(df2['timestamp'][index])
                 take_away_usage[nth_day - 1]+=(df2['usage'][index])
         
-        total_url= "https://api.steama.co/sites/26385/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
+        # if(site == 1):
+        #     total_url= "https://api.steama.co/sites/26385/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
+        # elif(site == 2):
+        #     total_url= "https://api.steama.co/sites/26678/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
+        total_url= "https://api.steama.co/utilities/1/" + "?start_time=" + start_time + "&end_time=" + end_time
 
-        r3 = requests.get(url=total_url, headers = header)
+        r3 = requests.get(url = total_url, headers = header)
         s3 = r3.content
         df3 = pd.read_json(s3)
             
@@ -4043,14 +4346,32 @@ def TotalGenerationDay(date):
        
        return fig 
 
+@app.callback(
+    Output('slct_year_3_1', 'options'),
+    [Input('slct_grid_3_1', 'value')])
+def update_dropdown(slct_grid_2_1):
+    if slct_grid_2_1 == 1:
+        return [
+            {"label": "2020", "value": "2020"},
+            {"label": "2021", "value": "2021"},
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
+    else:
+        return [
+            {"label": "2022", "value": "2022"},
+            {"label": "2023", "value": "2023"}
+        ]
 
 @app.callback(
        Output(component_id='my_graph_7_1', component_property='figure'),
-       Input('slct_user_3','value'))
+       Input('slct_year_3_1','value'),
+       Input('slct_grid_3_1','value'))
        
 
-def TotalGenerationMonth(slct_user_2): 
+def TotalGenerationMonth(slct_year_3_1, site): 
     TOKEN = refreshtoken(r1)
+    site = site
     #refreshtoken(r1) # Use refresh token as bearer token expires every 5 minutes (SMA sunny portal)  
     # GET DATA VIA LOOP
     TotalGeneration = [0,0,0,0,0,0,0,0,0,0,0,0]
@@ -4060,20 +4381,29 @@ def TotalGenerationMonth(slct_user_2):
     print("date: " + start_date[8:10]) # Access DD of YYYY-MM-DD """
     # Only single Get API request required for one year
 
-    r = "https://async-auth.smaapis.de/monitoring/v1/plants/5340310/measurements/sets/EnergyBalance/Year?Date={0}&WithTotal=false".format(slct_user_2)
+    r = "https://async-auth.smaapis.de/monitoring/v1/plants/5340310/measurements/sets/EnergyBalance/Year?Date={0}&WithTotal=false".format(slct_year_3_1)
 
     headers2 = {'Host':'smaapis.de','Content-Type': 'application/json','Authorization':'Bearer {0}'.format(TOKEN)}
     r = session.get(r,headers=headers2)
     data = r.json()
     i = 0
     for value in data['set']:
-        if slct_user_2 == 2020: # Solar microgrid only started operation from July, before then no data so exception needs to be considered for 2020
-            TotalGeneration[6+i] = ((value['totalGeneration']/1000))
-        elif data is None:
-            TotalGeneration[i] = 0
-        else: 
-            TotalGeneration[i] = ((value['totalGeneration']/1000))
-        i = i+1
+        if(site == 1):
+            if slct_year_3_1 == 2020: # Solar microgrid only started operation from July, before then no data so exception needs to be considered for 2020
+                TotalGeneration[6+i] = ((value['totalGeneration']/1000))
+            elif data is None:
+                TotalGeneration[i] = 0
+            else: 
+                TotalGeneration[i] = ((value['totalGeneration']/1000))
+            i = i+1
+        elif(site == 2):
+            if slct_year_3_1 == 2022: # Solar microgrid only started operation from July, before then no data so exception needs to be considered for 2020
+                TotalGeneration[6+i] = ((value['totalGeneration']/1000))
+            elif data is None:
+                TotalGeneration[i] = 0
+            else: 
+                TotalGeneration[i] = ((value['totalGeneration']/1000))
+            i = i+1
     """ batteryDischarging.append(data['set'][i]['batteryDischarging'])
     Totalconsumption.append(data['set'][i]['totalConsumption']) """
     # print(data['set'][i]['batteryStateOfCharge'])
