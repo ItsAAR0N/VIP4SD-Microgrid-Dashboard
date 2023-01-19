@@ -3261,20 +3261,22 @@ def update_graph(option_slctd, bttn1, bttn2, site):
     #This is to ensure that the timestamp array does not have 0s
     #This can occur if that last get request is to a customer that has missing timestamp readings
     #This link however does not have missing timestamps
-    if(site == 1):
-        site_url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-        site_url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-        rT1 = requests.get(url=site_url1, headers = header)                     
-        sT1 = rT1.content
-        dfT1 = pd.read_json(sT1)
 
-        rT2 = requests.get(url=site_url2, headers = header)                     
-        sT2 = rT2.content
-        dfT2 = pd.read_json(sT2)
+    #ADDITION OF BOTH
+    # if(site == 1):
+    #     site_url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+    #     site_url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+    #     rT1 = requests.get(url=site_url1, headers = header)                     
+    #     sT1 = rT1.content
+    #     dfT1 = pd.read_json(sT1)
 
-        dfT = pd.concat([dfT1, dfT2])
-        #dfT = pd.concat([dfT1, dfT2], axis = 0, join='outer')
-    elif(site == 2):
+    #     rT2 = requests.get(url=site_url2, headers = header)                     
+    #     sT2 = rT2.content
+    #     dfT2 = pd.read_json(sT2)
+
+    #     dfT = pd.concat([dfT1, dfT2])
+
+    if(site == 2):
         site_url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
         rT = requests.get(url=site_url, headers = header)
         sT = rT.content
@@ -3286,20 +3288,20 @@ def update_graph(option_slctd, bttn1, bttn2, site):
         dfT = pd.read_json(sT)                    
     
     if (div==1):
-        if(site == 1):
-            url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-            url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-            r1 = requests.get(url=url1, headers = header)                     
-            s1 = r1.content
-            df1 = pd.read_json(s1)
+        # if(site == 1):
+        #     url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        #     url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        #     r1 = requests.get(url=url1, headers = header)                     
+        #     s1 = r1.content
+        #     df1 = pd.read_json(s1)
 
-            r2 = requests.get(url=url2, headers = header)                     
-            s2 = r2.content
-            df2 = pd.read_json(s2)
+        #     r2 = requests.get(url=url2, headers = header)                     
+        #     s2 = r2.content
+        #     df2 = pd.read_json(s2)
 
-            df = pd.concat([df1, df2])
-            #df = pd.concat([df1, df2], axis = 0, join='outer')
-        elif(site == 2):
+        #     df = pd.concat([df1, df2])
+            
+        if(site == 2):
             url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
             r = requests.get(url=url, headers = header)
             s = r.content
@@ -3348,20 +3350,20 @@ def update_graph(option_slctd, bttn1, bttn2, site):
                 nth_day = convert_nth_day(df2['timestamp'][index])
                 take_away_revenue[nth_day - 1 ]+=(df2['revenue'][index])
       
-        if(site == 1):
-            url31 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-            url32 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-            r31 = requests.get(url=url31, headers = header)                     
-            s31 = r31.content
-            df31 = pd.read_json(s31)
+        # if(site == 1):
+        #     url31 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        #     url32 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
+        #     r31 = requests.get(url=url31, headers = header)                     
+        #     s31 = r31.content
+        #     df31 = pd.read_json(s31)
 
-            r32 = requests.get(url=url32, headers = header)                     
-            s32 = r32.content
-            df32 = pd.read_json(s32)
+        #     r32 = requests.get(url=url32, headers = header)                     
+        #     s32 = r32.content
+        #     df32 = pd.read_json(s32)
 
-            dfT = pd.concat([df31, df32])
-            #df3 = pd.concat([df31, df32], axis = 0, join='outer')
-        elif(site == 2):
+        #     dfT = pd.concat([df31, df32])
+           
+        if(site == 2):
             url3 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
             r3 = requests.get(url=url3, headers = header)
             s3 = r3.content
