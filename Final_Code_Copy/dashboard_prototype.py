@@ -5,7 +5,7 @@
 Created on Thu Feb 11 15:53:26 2021
 @original author: heatherwaddell
 @pre existing author(s): aaron,chris,jack
-@current author(s): ian,jamie,adam,ruaridh
+@current author(s): ian,jamie,adam,ruaridh,
 
 """
 import os # find current file directory
@@ -2031,17 +2031,20 @@ def render_content(tab):
         html.P("The charts above display the daily peak loads for the whole system throughout a given month or year."),
         html.P("This is useful data in order to analyse what the daily peak load of the whole microgrid is each day or month. This enables easy analysis of how much the peak load amount varies throughout the given time period. This could be useful for analysing the impact of an event (e.g., a storm) by observing how the daily peak load varies on the days of and around the event. Furthermore, this data could be useful for comparing with technical data in order to ensure the microgrid is able to supply the peak load of the system throughout the month/year. This data could also be useful to compare month to month or seasonally to see if the changing months or seasons has an impact on the peak loads of the system."),
         ])
-#===TAB 5 (Connection Status) xxx
+
+#===TAB 5 (Connection Status) 
     elif tab == 'tab-5':
             numOn = 0
             numOff = 0
+            numOn2 = 0
+            numOff2 = 0
 
             #grabbing the connection status data from the url
-            url_mth = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=60"
-            url_kud = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=60"
+            url_mth = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=110&site_id=26385"
             
             r = requests.get(url=url_mth, headers = header)
             s = r.content
+
             #converting json string to a panda object
             dfC_mth = pd.read_json(s)
             
@@ -2056,17 +2059,46 @@ def render_content(tab):
                     numOff += 1
                 elif(holder['status'] == "none"):
                     continue
-                
+
             status_mth = ['On', 'Off'] 
             data_mth = [numOn, numOff]
-            
+
             fig_mth = px.pie(values=data_mth, names=status_mth)
+
+
+            #Repeat for Kudembe
+            url_kud = "https://api.steama.co/customers/?fields=status,foo/?page=1&page_size=110&site_id=26678"
+
+            r2 = requests.get(url=url_kud, headers = header)
+            s2 = r2.content
+
+            dfC_kud = pd.read_json(s2)
+
+            for index in range(0,len(dfC_kud['count'])):
+                holder2 = dfC_kud['results'][index]
+                if(holder2['status'] == "on"):
+                    numOn2 += 1
+                elif(holder2['status'] == "off"):
+                    numOff2 += 1
+                elif(holder2['status'] == "none"):
+                    continue
+
+            status_kud = ['On', 'Off'] 
+            data_kud = [numOn2, numOff2]
+            
+            fig_kud = px.pie(values=data_kud, names=status_kud)
+
             return html.Div([
                     html.Br(),
                     html.Hr(),
                     html.H2('Current Connection Status'),
-                    dcc.Graph(id="pie-chart", figure = fig_mth),
                     html.Br(),
+                    html.H6("Mthembanji Connection Status"),
+                    dcc.Graph(id="pie-chart-mth", figure = fig_mth),
+                    html.Hr(),
+                    html.Br(),
+                    html.H6("Kudembe Connection Status"),
+                    dcc.Graph(id="pie-chart-kud", figure = fig_kud),
                     html.Hr(),
 
                     html.P("This pie chart displays the current percentage of customers who have an active connection (ON) or have their connection disabled (OFF)."),
@@ -2074,75 +2106,27 @@ def render_content(tab):
                     html.Br(),
                     html.Hr(),
             ])
-
+#xxx
     elif tab == 'tab-6':
         return html.Div([
             html.Br(),
             html.Hr(),
             html.H2("Customer Usage for a Given Day"),
+            html.Br(),
+            html.H6("Please Select Microgrid Site:"),
+            dcc.RadioItems(id = 'slct_grid_6_1',
+                options=[
+                    {'label': 'Mthembanji', 'value': 1},
+                    {'label': 'Kudembe', 'value': 2},
+                ],
+                value=1,
+                inputStyle={"margin-left": "15px", "margin-right":"5px"}
+            ),
+            html.Br(),
             html.H6("Please select a customer from the dropdown: "),
             dcc.Dropdown(id="slct_customer",
                      options=[
-                         {"label": "001", "value": "Zacharia Alfred"},
-                         {"label": "002", "value": "Dalitso Bizweck"},
-                         {"label": "003", "value": "Bizzy Bizzy"},
-                         {"label": "004", "value": "Zipi Chadinga"},
-                         {"label": "005", "value": "Clodio Chagona"},
-                         {"label": "006", "value": "Stephano Chagona"},
-                         {"label": "007", "value": "Matilda Chagontha"},
-                         {"label": "008", "value": "Sainet Chemtila"},
-                         {"label": "009", "value": "Layton Chidavu"},
-                         {"label": "010", "value": "Lucia Chikapa"},
-                         {"label": "011", "value": "St John's Cathoric church"},
-                         {"label": "012", "value": "Seba Eliko"},
-                         {"label": "013", "value": "Vester Everson"},
-                         {"label": "014", "value": "Agatha Evesi"},
-                         {"label": "015", "value": "Wisdory Freizer"},
-                         {"label": "016", "value": "Lameck Galion"},
-                         {"label": "017", "value": "George Gilibati"},
-                         {"label": "018", "value": "Daudi Gondwa"},
-                         {"label": "019", "value": "Eliko Gonthi"},
-                         {"label": "020", "value": "Robert Gwafali"},
-                         {"label": "021", "value": "Chrisy Helemesi"},
-                         {"label": "022", "value": "Fedrick Jumbe"},
-                         {"label": "023", "value": "Jovelo Justin"},
-                         {"label": "024", "value": "Flescot R Kalambo"},
-                         {"label": "025", "value": "Davie Kamayaya"},
-                         {"label": "026", "value": "James Kamkwamba"},
-                         {"label": "027", "value": "Stampa Kamkwamba"},
-                         {"label": "028", "value": "Alex Kapingasa"},
-                         {"label": "029", "value": "Yohane Lipenga"},
-                         {"label": "030", "value": "Zakeyo Lipenga"},
-                         {"label": "031", "value": "Kelita Luciano"},
-                         {"label": "032", "value": "Lameck Luka"},
-                         {"label": "033", "value": "Richard Lyton"},
-                         {"label": "034", "value": "Lameki Malota"},
-                         {"label": "035", "value": "Noel Malota"},
-                         {"label": "036", "value": "Deborah Mangochi"},
-                         {"label": "037", "value": "Sedonia Mangochi"},
-                         {"label": "038", "value": "Elenata Mike"},
-                         {"label": "039", "value": "Agatha Miliano"},
-                         {"label": "040", "value": "Evinesi Miliano"},
-                         {"label": "041", "value": "Chinasi Mofati"},
-                         {"label": "042", "value": "Conrad Mpeketula"},
-                         {"label": "043", "value": "Alick Mphemvu"},
-                         {"label": "044", "value": "Linda Msowa"},
-                         {"label": "045", "value": "Maliko Mulanje"},
-                         {"label": "046", "value": "Gibson Mvula"},
-                         {"label": "047", "value": "Aujenia Nicolus"},
-                         {"label": "048", "value": "Peter Justin Nyale"},
-                         {"label": "049", "value": "Bizweck Record"},
-                         {"label": "050", "value": "Ntandamula primary school"},
-                         {"label": "051", "value": "Lewis Semiyano"},
-                         {"label": "052", "value": "Bizweck Shalifu"},
-                         {"label": "053", "value": "Rodreck Sipiliano"},
-                         {"label": "054", "value": "Kinlos Spiliano"},
-                         {"label": "055", "value": "Nickson Spiliano"},
-                         {"label": "056", "value": "Tobias Spiliano"},
-                         {"label": "057", "value": "Patrick Sugar"},
-                         {"label": "058", "value": "Stephano Tobias"},
-                         {"label": "059", "value": "Luciano Veleliyano"},
-                         {"label": "060", "value": "Konoliyo Zipi"},
+
                          ],    
                      placeholder="Select a customer",
                      searchable = False,
@@ -2443,7 +2427,79 @@ def update_cust_month_average_graph(date_value, cust_name):
                 tickangle = 45)
             
             return fig
-            
+            #xxx
+@app.callback(
+    Output('slct_customer', 'options'),
+    [Input('slct_grid_6_1', 'value')])
+
+def update_dropdown_options(value):
+    if value == 1:
+        return [
+            {"label": "001", "value": "Zacharia Alfred"},
+            {"label": "002", "value": "Dalitso Bizweck"},
+            {"label": "003", "value": "Bizzy Bizzy"},
+            {"label": "004", "value": "Zipi Chadinga"},
+            {"label": "005", "value": "Clodio Chagona"},
+            {"label": "006", "value": "Stephano Chagona"},
+            {"label": "007", "value": "Matilda Chagontha"},
+            {"label": "008", "value": "Sainet Chemtila"},
+            {"label": "009", "value": "Layton Chidavu"},
+            {"label": "010", "value": "Lucia Chikapa"},
+            {"label": "011", "value": "St John's Cathoric church"},
+            {"label": "012", "value": "Seba Eliko"},
+            {"label": "013", "value": "Vester Everson"},
+            {"label": "014", "value": "Agatha Evesi"},
+            {"label": "015", "value": "Wisdory Freizer"},
+            {"label": "016", "value": "Lameck Galion"},
+            {"label": "017", "value": "George Gilibati"},
+            {"label": "018", "value": "Daudi Gondwa"},
+            {"label": "019", "value": "Eliko Gonthi"},
+            {"label": "020", "value": "Robert Gwafali"},
+            {"label": "021", "value": "Chrisy Helemesi"},
+            {"label": "022", "value": "Fedrick Jumbe"},
+            {"label": "023", "value": "Jovelo Justin"},
+            {"label": "024", "value": "Flescot R Kalambo"},
+            {"label": "025", "value": "Davie Kamayaya"},
+            {"label": "026", "value": "James Kamkwamba"},
+            {"label": "027", "value": "Stampa Kamkwamba"},
+            {"label": "028", "value": "Alex Kapingasa"},
+            {"label": "029", "value": "Yohane Lipenga"},
+            {"label": "030", "value": "Zakeyo Lipenga"},
+            {"label": "031", "value": "Kelita Luciano"},
+            {"label": "032", "value": "Lameck Luka"},
+            {"label": "033", "value": "Richard Lyton"},
+            {"label": "034", "value": "Lameki Malota"},
+            {"label": "035", "value": "Noel Malota"},
+            {"label": "036", "value": "Deborah Mangochi"},
+            {"label": "037", "value": "Sedonia Mangochi"},
+            {"label": "038", "value": "Elenata Mike"},
+            {"label": "039", "value": "Agatha Miliano"},
+            {"label": "040", "value": "Evinesi Miliano"},
+            {"label": "041", "value": "Chinasi Mofati"},
+            {"label": "042", "value": "Conrad Mpeketula"},
+            {"label": "043", "value": "Alick Mphemvu"},
+            {"label": "044", "value": "Linda Msowa"},
+            {"label": "045", "value": "Maliko Mulanje"},
+            {"label": "046", "value": "Gibson Mvula"},
+            {"label": "047", "value": "Aujenia Nicolus"},
+            {"label": "048", "value": "Peter Justin Nyale"},
+            {"label": "049", "value": "Bizweck Record"},
+            {"label": "050", "value": "Ntandamula primary school"},
+            {"label": "051", "value": "Lewis Semiyano"},
+            {"label": "052", "value": "Bizweck Shalifu"},
+            {"label": "053", "value": "Rodreck Sipiliano"},
+            {"label": "054", "value": "Kinlos Spiliano"},
+            {"label": "055", "value": "Nickson Spiliano"},
+            {"label": "056", "value": "Tobias Spiliano"},
+            {"label": "057", "value": "Patrick Sugar"},
+            {"label": "058", "value": "Stephano Tobias"},
+            {"label": "059", "value": "Luciano Veleliyano"},
+            {"label": "060", "value": "Konoliyo Zipi"},]
+    elif value == 2:
+        return [
+            {"label": "011", "value": "St John's Cathoric church"},
+            {"label": "012", "value": "Seba Eliko"}]
+
 @app.callback(
     Output(component_id='cust_on_day_graph', component_property='figure'),
     [Input(component_id='my-date-picker-single-2', component_property='date'),
@@ -3708,8 +3764,8 @@ def update_output(date_value, site, bttn1, bttn2):
     Input('slct_grid_3_1','value')])
 
 def Load_year(bttn, site):
-    site = site
     div = bttn
+    site = site
     
     df = pd.read_excel('read.xlsx')
     
