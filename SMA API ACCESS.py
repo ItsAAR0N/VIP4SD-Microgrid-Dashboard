@@ -46,24 +46,15 @@ STEPONEURL = "https://auth.smaapis.de/oauth2/token"
 step1payload = "POST%20sandbox.smaapis.de%2Foauth2%2Ftoken=&HTTP%2F1.1=&Host%3A%20smaapis.de=&Content-Type%3A%20application%2Fx-www-form-urlencoded=&client_id=strathclyde_api&client_secret=1f773505-616b-49a0-a462-5889fa690384&grant_type=client_credentials&="
 headers1 = CaseInsensitiveDict()
 headers1["Content-Type"] = "application/x-www-form-urlencoded"
-
 r1 = requests.post(STEPONEURL, data=step1payload,headers=headers1)
-print("\n(STEP ONE) Status Code: {0}. Successful: {1}\n".format(r1.status_code,success(r1.status_code)))
 TOKEN = r1.json()['access_token']
 REFRESHTOKEN = r1.json()['refresh_token']
-print("{0}\n".format(TOKEN)) # (PRINT TOKEN)
-print("REFRESH TOKEN")
-print("{0}\n".format(REFRESHTOKEN)) # (PRINT TOKEN)
 
 # STEP 2
 STEPTWOURL = "https://async-auth.smaapis.de/oauth2/v2/bc-authorize"
 headers2 = {'Content-Type': 'application/json','Authorization':'Bearer {0}'.format(TOKEN)}
 step2payload = {'loginHint':'aaron.shek.2020@uni.strath.ac.uk'}
-
 r2 = requests.post(STEPTWOURL, json=step2payload,headers=headers2)
-print("\n(STEP TWO) Status Code: {0}. Successful: {1}\n".format(r2.status_code,success(r2.status_code)))
-print(r2.json())
-
 
 def function(r1):
        STEPONEURL = "https://auth.smaapis.de/oauth2/token"
@@ -82,12 +73,38 @@ def function(r1):
 # STEP 3 - GET DATA VIA API FOR EXAMPLE
 r = "https://async-auth.smaapis.de/monitoring/v1/plants"
 headers2 = {'Host':'smaapis.de','Content-Type': 'application/json','Authorization':'Bearer {0}'.format(function(r1))}
+r = session.get(r,headers=headers2)
+data_initial = r.json()
+print(data_initial)
+
+# STEP 3 - GET DATA VIA API FOR EXAMPLE
+r = "https://async-auth.smaapis.de/monitoring/v1/plants/5340310/measurements/sets/EnergyBalance/Total?WithTotal=true"
+headers2 = {'Host':'smaapis.de','Content-Type': 'application/json','Authorization':'Bearer {0}'.format(function(r1))}
 
 r = session.get(r,headers=headers2)
 print("\nStatus Code: {0}. Successful: {1}\n".format(r.status_code,success(r.status_code)))
 data_initial = r.json()
-#print(data_initial)
+print(data_initial)
 
+
+# STEP 3 - GET DATA VIA API FOR EXAMPLE
+if C_month < 10:
+       r3 = "https://async-auth.smaapis.de/monitoring/v1/plants/5340310/measurements/sets/EnergyBalance/Month?Date={0}-0{1}&WithTotal=false".format(C_year,C_month)
+else:
+       r3 = "https://async-auth.smaapis.de/monitoring/v1/plants/5340310/measurements/sets/EnergyBalance/Month?Date={0}-{1}&WithTotal=false".format(C_year,C_month)
+headers2 = {'Host':'smaapis.de','Content-Type': 'application/json','Authorization':'Bearer {0}'.format(function(r1))}
+
+r3 = session.get(r3,headers=headers2)
+print("\nStatus Code: {0}. Successful: {1}\n".format(r.status_code,success(r.status_code)))
+data_initial = r3.json()
+#print(data_initial)
+TotalConsumptionDisplay = 0
+for value in data_initial['set']:
+              print(value['totalGeneration'])
+              TotalConsumptionDisplay = TotalConsumptionDisplay + (value['totalGeneration'])
+              
+
+print(TotalConsumptionDisplay)
 
 
 TotalConsumption = []
