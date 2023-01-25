@@ -1692,7 +1692,7 @@ def render_content(tab):
             html.Br(),
             html.Hr(),
         ])
-#===TAB2 (Monthly Demand)
+#===TAB2 (Monthly Demand) xxx
     elif tab == 'tab-2':
         return html.Div([            
             html.Hr(),
@@ -2104,7 +2104,7 @@ def render_content(tab):
                     html.Br(),
                     html.Hr(),
             ])
-#xxx
+
     elif tab == 'tab-6':
         return html.Div([
             html.Br(),
@@ -2499,7 +2499,6 @@ def update_cust_month_average_graph(date_value, cust_name):
                 tickangle = 45)
             
             return fig
-            #xxx
 
 @app.callback(
     [Output('my-date-picker-single-2', 'min_date_allowed'),
@@ -2854,8 +2853,10 @@ def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is
         count = len(all_cust_fnames)
         if(site == 1):
             url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Mthembanji"
         elif(site == 2):
             url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Kudembe"
         r2 = requests.get(url=url, headers = header)
         s2 = r2.content
         df2 = pd.read_json(s2)
@@ -2864,6 +2865,12 @@ def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is
             hourly_usage[index] += df2['usage'][index]
     
     elif (div==2):
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
+
         U= "Residential Users"
         for index in range(0,len(cust_fnames_bus_ins)):
             first_name=cust_fnames_bus_ins[index]
@@ -2912,6 +2919,12 @@ def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is
                 hourly_usage[index]=(total_hourly_usage[index] - take_away_usage[index])/count        
     
     elif (div==3):
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
+
         U = "Business Users"
         for index in range(0,len(cust_fnames_bus)):
             first_name=cust_fnames_bus[index]
@@ -2943,6 +2956,12 @@ def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is
                     hourly_usage[index] += df2['usage'][index]/count
     #same method as businesses ^    
     else:
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
+
         U= "Institutional Users"         
         for index in range(0,len(cust_fnames_ins)):
             first_name=cust_fnames_ins[index]
@@ -3001,7 +3020,7 @@ def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is
     end_time = str(date2) #
 
 
-    title =  T + " Load Profile for " + U + " for: " + start_time + " to " + end_time
+    title =  T + " Load Profile for " + U + " for: " + start_time + " to " + end_time + " (" + str(site_name) + ")"
     
     FillSpreadSheet(title, "Time", "Demand (kWh)", time, load_profile, "Load_Profile_Range")   
     
@@ -3011,7 +3030,7 @@ def update_av_load_graph(start_date_value, end_date_value, site, bttn1, bttn2,is
                         mode='lines+markers',
                         ))
             
-    fig.update_layout(title = T + " Load Profile for " + U + " for: " + start_time + " to " + end_time,
+    fig.update_layout(title = T + " Load Profile for " + U + " for: " + start_time + " to " + end_time + " (" + str(site_name) + ")",
                       xaxis_title='Time',
                       yaxis_title='Demand (kWh)',
                       yaxis_range=[-0.02,max(load_profile)+0.02])
@@ -3169,7 +3188,7 @@ def update_peak_graph(date_value, site):
                 i+=1
                 temp.clear()  
 
-        title = "Peak Loads for " + str(M) + " " + str(date[0:4])
+        title = "Peak Loads for " + str(M) + " " + str(date[0:4]) + " (" + str(site_name) + ")"
     
         FillSpreadSheet(title, "Day", "Peak Demand (kWh)", x, peaks, "Peaks_Month") 
                 
@@ -3179,7 +3198,7 @@ def update_peak_graph(date_value, site):
                             mode='lines+markers',
                             ))
             
-        fig.update_layout(title ="Peak Loads for " + str(M) + " " + str(date[0:4]),
+        fig.update_layout(title ="Peak Loads for " + str(M) + " " + str(date[0:4]) + " (" + str(site_name) + ")",
                           xaxis_title='Day',
                           yaxis_title='Peak Demand (kWh)', 
                           xaxis = dict(
@@ -3229,6 +3248,7 @@ def update_peak_graph_2(date, site):
         site_name = "Mthembanji"
         url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
     elif(site == 2):
+        site_name = "Kudembe"
         url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
 
     r = requests.get(url, headers = header)
@@ -3250,7 +3270,7 @@ def update_peak_graph_2(date, site):
         max_value = max(temp)
         peaks.append(max_value)
         
-    title = "Peak Loads for " + str(start_time[0:4]) + " " + str(site_name)
+    title = "Peak Loads for " + str(start_time[0:4]) + " (" + str(site_name) + ")"
     
     FillSpreadSheet(title, "Month", "Peak Demand (kWh)", time, peaks, "Peaks_Year")    
     
@@ -3260,7 +3280,7 @@ def update_peak_graph_2(date, site):
                             mode='lines+markers',
                             ))
             
-    fig.update_layout(title ="Peak Loads for " + str(start_time[0:4]),
+    fig.update_layout(title ="Peak Loads for " + str(start_time[0:4]) + " (" + str(site_name) + ")",
                         xaxis_title='Month',
                         yaxis_title='Peak Demand (kWh)', 
                         xaxis = dict(
@@ -3394,55 +3414,32 @@ def update_graph(option_slctd, bttn1, bttn2, site):
     #This can occur if that last get request is to a customer that has missing timestamp readings
     #This link however does not have missing timestamps
 
-    #ADDITION OF BOTH
-    # if(site == 1):
-    #     site_url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-    #     site_url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-    #     rT1 = requests.get(url=site_url1, headers = header)                     
-    #     sT1 = rT1.content
-    #     dfT1 = pd.read_json(sT1)
-
-    #     rT2 = requests.get(url=site_url2, headers = header)                     
-    #     sT2 = rT2.content
-    #     dfT2 = pd.read_json(sT2)
-
-    #     dfT = pd.concat([dfT1, dfT2])
-
     if(site == 2):
         site_url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
         rT = requests.get(url=site_url, headers = header)
         sT = rT.content
         dfT = pd.read_json(sT)
+        site_name = "Mthembanji"
     elif(site == 3):
         site_url = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
         rT = requests.get(url=site_url, headers = header) 
         sT = rT.content
-        dfT = pd.read_json(sT)                    
+        dfT = pd.read_json(sT)     
+        site_name = "Kudembe"               
     
     if (div==1):
-        # if(site == 1):
-        #     url1 = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-        #     url2 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time
-        #     r1 = requests.get(url=url1, headers = header)                     
-        #     s1 = r1.content
-        #     df1 = pd.read_json(s1)
-
-        #     r2 = requests.get(url=url2, headers = header)                     
-        #     s2 = r2.content
-        #     df2 = pd.read_json(s2)
-
-        #     df = pd.concat([df1, df2])
-            
         if(site == 2):
             url = "https://api.steama.co/sites/26385/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
             r = requests.get(url=url, headers = header)
             s = r.content
             df = pd.read_json(s)
+            site_name = "Mthembanji"
         elif(site == 3):
             url = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time  
             r = requests.get(url=url, headers = header) 
             s = r.content
-            df = pd.read_json(s)                   
+            df = pd.read_json(s)    
+            site_name = "Kudembe"               
         
         for index in range(0,len(df['timestamp'])):
             if (div2==1):
@@ -3500,11 +3497,13 @@ def update_graph(option_slctd, bttn1, bttn2, site):
             r3 = requests.get(url=url3, headers = header)
             s3 = r3.content
             df3 = pd.read_json(s3)
+            site_name = "Mthembanji"
         elif(site == 3):
             url3 = "https://api.steama.co/sites/26678/revenue/" + "?start_time=" + start_time + "&end_time=" + end_time 
             r3 = requests.get(url=url3, headers = header)   
             s3 = r3.content
-            df3 = pd.read_json(s3)                   
+            df3 = pd.read_json(s3)   
+            site_name = "Kudembe"                
         
         for index in range(0,len(df3['timestamp'])):
             total_daily_revenue[index]+=df3['revenue'][index]
@@ -3604,7 +3603,7 @@ def update_graph(option_slctd, bttn1, bttn2, site):
             amount = 0
     
     
-    title = T + " for " + T2     
+    title = T + " for " + T2 + " (" + str(site_name) + ")"
     
     
     FillSpreadSheet(title, "Month", "Revenue (USD)", time, monthly_revenue, "Revenue")
@@ -3615,7 +3614,7 @@ def update_graph(option_slctd, bttn1, bttn2, site):
          L : monthly_revenue,
         })    
     
-    fig = px.bar(dff, x="Month", y=L, title = T + "for " + T2 + " During " + str(date))
+    fig = px.bar(dff, x="Month", y=L, title = T + "for " + T2 + " During " + str(date) + " (" + str(site_name) + ")")
     
     return fig
 
@@ -3731,8 +3730,10 @@ def update_output(date_value, site, bttn1, bttn2):
         #Select the API for the correct site
         if (site == 1):
             url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Mthembanji"
         elif (site == 2):
             url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Kudembe"
 
         r = requests.get(url=url, headers = header)
         s = r.content
@@ -3747,6 +3748,12 @@ def update_output(date_value, site, bttn1, bttn2):
 
     
     elif (div==2):
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
+
         T = "Residential Users "
         
         #Get requests will be made to ins & bus customers then taken away from total 
@@ -3801,6 +3808,12 @@ def update_output(date_value, site, bttn1, bttn2):
     # Get requests to business/institution users and filling arrays
     # No taking away this time
     elif (div==3):
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
+
         T = "Business Users "
         for index in range(0,len(cust_fnames_bus)):
             first_name=cust_fnames_bus[index]
@@ -3832,6 +3845,12 @@ def update_output(date_value, site, bttn1, bttn2):
                     hourly_usage[index] += df2['usage'][index]/count
     #same method as businesses ^    
     else:
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
+
         T= "Institutional Users " 
         
         for index in range(0,len(cust_fnames_ins)):
@@ -3876,7 +3895,7 @@ def update_output(date_value, site, bttn1, bttn2):
                 temp = a + ":00:00+00:00"
                 time.append(temp[0:8])
                 
-    title = L + "Load Profile for " + T + "on " + str(date)
+    title = L + "Load Profile for " + T + "on " + str(date) + " (" + str(site_name) + ")"
     
     FillSpreadSheet(title, "Time", "Demand (kWh)", time, hourly_usage, "Load_Profile_Day")
     
@@ -3886,7 +3905,7 @@ def update_output(date_value, site, bttn1, bttn2):
                         mode='lines+markers',
                         ))
     
-    fig.update_layout(title = L + "Load Profile for " + T + "on " + str(date),
+    fig.update_layout(title = L + "Load Profile for " + T + "on " + str(date) + " (" + str(site_name) + ")",
                    xaxis_title='Time',
                    yaxis_title='Demand (kWh)')
     
@@ -3979,7 +3998,7 @@ def update_dropdown(slct_grid_2_1):
             {"label": "2022", "value": "2022"},
             {"label": "2023", "value": "2023"}
         ]
-
+#xxx
 @app.callback(
     Output(component_id='my_graph_4', component_property='figure'),
     [Input(component_id='slct_year', component_property='value'),
@@ -4068,19 +4087,31 @@ def update_output_2(date_value, bttn1, bttn2, site):
     if (div==1):
         if(site == 1):
             url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Mthembanji"
         elif(site == 2):
             url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Kudembe"
 
         r = requests.get(url = url, headers = header)
         s = r.content
         df2 = pd.read_json(s)
       
-        for index in range(0,len(df2['timestamp'])):
-            if (div2==1):
-                daily_usage[index]+=(df2['usage'][index])
-            else:
-                daily_usage[index]+=(df2['usage'][index])/len(all_cust_fnames)
+        # for index in range(0,len(df2['timestamp'])):
+        #     if (div2==1):
+        #         daily_usage[index]+=(df2['usage'][index])
+        #     else:
+        #         daily_usage[index]+=(df2['usage'][index])/len(all_cust_fnames
 
+        # Convert start_time and timestamp to timezone-naive Timestamps
+        start_time_check = pd.to_datetime(start_time).tz_localize(None)
+        df2['timestamp'] = df2['timestamp'].dt.tz_localize(None)
+
+        for index in range(0,len(df2['timestamp'])):
+            if (df2['timestamp'][index] >= start_time_check):
+                if (div2==1):
+                    daily_usage[index]+=(df2['usage'][index])
+                else:
+                    daily_usage[index]+=(df2['usage'][index])/len(all_cust_fnames)
     
     if (div==2):      
         
@@ -4111,11 +4142,12 @@ def update_output_2(date_value, bttn1, bttn2, site):
                 nth_day = convert_nth_day(df2['timestamp'][index])
                 take_away_usage[nth_day - 1]+=(df2['usage'][index])
         
-        # if(site == 1):
-        #     total_url= "https://api.steama.co/sites/26385/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
-        # elif(site == 2):
-        #     total_url= "https://api.steama.co/sites/26678/utilities/1/usage/" + "?start_time=" + start_time + "&end_time=" + end_time
-        total_url= "https://api.steama.co/utilities/1/" + "?start_time=" + start_time + "&end_time=" + end_time
+        if(site == 1):
+            total_url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Mthembanji"
+        elif(site == 2):
+            total_url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Kudembe"
 
         r3 = requests.get(url = total_url, headers = header)
         s3 = r3.content
@@ -4132,6 +4164,11 @@ def update_output_2(date_value, bttn1, bttn2, site):
             
                 
     if (div==3):
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
        
         for index in range(0,len(cust_fnames_bus)):
             first_name=cust_fnames_bus[index]
@@ -4166,6 +4203,11 @@ def update_output_2(date_value, bttn1, bttn2, site):
 
 
     else:
+
+        if(site == 1):
+            site_name = "Mthembanji"
+        elif(site == 2):
+            site_name = "Kudembe"
 
         for index in range(0,len(cust_fnames_ins)):
             first_name=cust_fnames_ins[index]
@@ -4219,19 +4261,18 @@ def update_output_2(date_value, bttn1, bttn2, site):
             monthly_usage.append(amount)
             amount = 0 
             
-    title =  Label + " Demand for " + User_Category + " customers for " + str(date)
+    title =  Label + " Demand for " + User_Category + " customers for " + str(date) + " (" + str(site_name) + ")"
     FillSpreadSheet(title, "Month", "Demand (kWh)", time, monthly_usage,"Monthly_Demand")
      
     fig = go.Figure()
     
-    #######Extra code to plot data as a bar chart /// may be better alternative 
     #######Extra code to plot data as a bar chart /// may be better alternative 
     dff = pd.DataFrame(
         {"Month" : time,
          "Demand (kWh)" : monthly_usage,
         })    
     
-    fig = px.bar(dff, x="Month", y="Demand (kWh)", title = Label + " Demand for " + User_Category + " customers for " + str(date))
+    fig = px.bar(dff, x="Month", y="Demand (kWh)", title = Label + " Demand for " + User_Category + " customers for " + str(date) + " (" + str(site_name) + ")")
         
     return fig
 
@@ -4539,8 +4580,8 @@ def TotalGenerationDay(date):
 @app.callback(
     Output('slct_year_3_1', 'options'),
     [Input('slct_grid_3_1', 'value')])
-def update_dropdown(slct_grid_2_1):
-    if slct_grid_2_1 == 1:
+def update_dropdown(slct_grid_3_1):
+    if slct_grid_3_1 == 1:
         return [
             {"label": "2020", "value": "2020"},
             {"label": "2021", "value": "2021"},
