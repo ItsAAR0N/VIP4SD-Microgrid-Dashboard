@@ -4086,32 +4086,26 @@ def update_output_2(date_value, bttn1, bttn2, site):
     
     if (div==1):
         if(site == 1):
+            if date == "2020":
+                start_time = "2020-06-05T00:00:00+00:00"
             url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
             site_name = "Mthembanji"
         elif(site == 2):
+            if date == "2022":
+                start_time = "2022-09-21T00:00:00"
             url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
             site_name = "Kudembe"
+            
 
         r = requests.get(url = url, headers = header)
         s = r.content
         df2 = pd.read_json(s)
       
-        # for index in range(0,len(df2['timestamp'])):
-        #     if (div2==1):
-        #         daily_usage[index]+=(df2['usage'][index])
-        #     else:
-        #         daily_usage[index]+=(df2['usage'][index])/len(all_cust_fnames
-
-        # Convert start_time and timestamp to timezone-naive Timestamps
-        start_time_check = pd.to_datetime(start_time).tz_localize(None)
-        df2['timestamp'] = df2['timestamp'].dt.tz_localize(None)
-
         for index in range(0,len(df2['timestamp'])):
-            if (df2['timestamp'][index] >= start_time_check):
-                if (div2==1):
-                    daily_usage[index]+=(df2['usage'][index])
-                else:
-                    daily_usage[index]+=(df2['usage'][index])/len(all_cust_fnames)
+            if (div2==1):
+                daily_usage[index]+=(df2['usage'][index])
+            else:
+                daily_usage[index]+=(df2['usage'][index])/len(all_cust_fnames)
     
     if (div==2):      
         
@@ -4143,9 +4137,13 @@ def update_output_2(date_value, bttn1, bttn2, site):
                 take_away_usage[nth_day - 1]+=(df2['usage'][index])
         
         if(site == 1):
+            if date == "2020":
+                start_time = "2020-06-05T00:00:00+00:00"
             total_url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
             site_name = "Mthembanji"
         elif(site == 2):
+            if date == "2022":
+                start_time = "2022-09-21T00:00:00"
             total_url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
             site_name = "Kudembe"
 
@@ -4181,8 +4179,19 @@ def update_output_2(date_value, bttn1, bttn2, site):
             df = pd.read_json(s)
             holder = df['results'][0]
             
-            usage_url = holder['utilities_url'] + "1/usage/"
-            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+            # usage_url = holder['utilities_url'] + "1/usage/"
+            # url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+
+            if(site == 1):
+                if date == "2020":
+                    start_time = "2020-06-05T00:00:00+00:00"
+                usage_url = holder['utilities_url'] + "1/usage/"
+                url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+            elif(site == 2):
+                if date == "2022":
+                    start_time = "2022-09-21T00:00:00"
+                usage_url = holder['utilities_url'] + "1/usage/"
+                url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
             
             r2 = requests.get(url=url2, headers = header)
             s2 = r2.content
@@ -4199,8 +4208,6 @@ def update_output_2(date_value, bttn1, bttn2, site):
                     daily_usage[nth_day - 1]+=(df2['usage'][index])
                 else:
                     daily_usage[nth_day - 1]+=((df2['usage'][index])/count)
-
-
 
     else:
 
@@ -4220,8 +4227,16 @@ def update_output_2(date_value, bttn1, bttn2, site):
             df = pd.read_json(s)
             holder = df['results'][0]
             
-            usage_url = holder['utilities_url'] + "1/usage/"
-            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+            if(site == 1):
+                if date == "2020":
+                    start_time = "2020-06-05T00:00:00+00:00"
+                usage_url = holder['utilities_url'] + "1/usage/"
+                url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+            elif(site == 2):
+                if date == "2022":
+                    start_time = "2022-09-21T00:00:00"
+                usage_url = holder['utilities_url'] + "1/usage/"
+            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time            
             
             r2 = requests.get(url=url2, headers = header)
             s2 = r2.content
