@@ -84,6 +84,7 @@ r = session.get(r,headers=headers2)
 data_initial = r.json()
 #print(data_initial) 
 
+#Sunny Portal
 def refreshtoken(r1):
        STEPONEURL = "https://auth.smaapis.de/oauth2/token"
        step1payload = "POST%20sandbox.smaapis.de%2Foauth2%2Ftoken=&HTTP%2F1.1=&Host%3A%20smaapis.de=&Content-Type%3A%20application%2Fx-www-form-urlencoded=&client_id=strathclyde_api&client_secret=1f773505-616b-49a0-a462-5889fa690384&grant_type=client_credentials&scope=offline_access"
