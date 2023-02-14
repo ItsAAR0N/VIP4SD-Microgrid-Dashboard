@@ -14,8 +14,10 @@ import dash
 from dash import dcc as file 
 from dash import State
 from dash import Dash, dcc, html, Input, Output, dash_table
-import dash_core_components as dcc # from dash import dcc 
-import dash_html_components as html # from dash import html
+#import dash_core_components as dcc # from dash import dcc 
+from dash import dcc
+#import dash_html_components as html # from dash import html
+from dash import html
 from dash.dependencies import Input, Output
 from dash.exceptions import PreventUpdate
 import requests
@@ -4065,6 +4067,9 @@ def update_output_2(date_value, bttn1, bttn2, site):
                     
     cust_fnames_bus_ins=cust_fnames_bus+cust_fnames_ins
     cust_snames_bus_ins=cust_snames_bus+cust_snames_ins
+
+    cust_fnames_res_ins=cust_fnames_res+cust_fnames_ins
+    cust_snames_res_ins=cust_snames_res+cust_snames_ins
     
     all_cust_fnames= cust_fnames_bus_ins+cust_fnames_res
     
@@ -4164,35 +4169,65 @@ def update_output_2(date_value, bttn1, bttn2, site):
                 
     if (div==3):
 
-        if(site == 1):
-            site_name = "Mthembanji"
-        elif(site == 2):
-            site_name = "Kudembe"
+        # if(site == 1):
+        #     site_name = "Mthembanji"
+        # elif(site == 2):
+        #     site_name = "Kudembe"
        
-        for index in range(0,len(cust_fnames_bus)):
-            first_name=cust_fnames_bus[index]
-            surname=cust_snames_bus[index]
+        # for index in range(0,len(cust_fnames_bus)):
+        #     first_name=cust_fnames_bus[index]
+        #     surname=cust_snames_bus[index]
+            
+        #     url = "https://api.steama.co/customers/?last_name=" + surname + "&first_name=" + first_name
+                
+        #     r = requests.get(url=url, headers = header)
+        #     s = r.content
+        #     df = pd.read_json(s)
+        #     holder = df['results'][0]
+            
+        #     # usage_url = holder['utilities_url'] + "1/usage/"
+        #     # url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+
+        #     if(site == 1):
+        #         if date == "2020":
+        #             start_time = "2020-06-05T00:00:00+00:00"
+        #         usage_url = holder['utilities_url'] + "1/usage/"
+        #         url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+        #     elif(site == 2):
+        #         if date == "2022":
+        #             start_time = "2022-09-21T00:00:00"
+        #         usage_url = holder['utilities_url'] + "1/usage/"
+        #         url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+            
+        #     r2 = requests.get(url=url2, headers = header)
+        #     s2 = r2.content
+        #     df2 = pd.read_json(s2)
+
+        #     if df2.empty:
+        #         continue
+            
+        #     count+=1 
+            
+        #     for index in range(0,len(df2['timestamp'])):
+        #         nth_day = convert_nth_day(df2['timestamp'][index])
+        #         if (div2==1):
+        #             daily_usage[nth_day - 1]+=(df2['usage'][index])
+        #         else:
+        #             daily_usage[nth_day - 1]+=((df2['usage'][index])/count)
+
+        for index in range(0,len(cust_fnames_res_ins)):
+            first_name=cust_fnames_res_ins[index]
+            surname=cust_snames_res_ins[index]
             
             url = "https://api.steama.co/customers/?last_name=" + surname + "&first_name=" + first_name
                 
-            r = requests.get(url=url, headers = header)
+            r = requests.get(url = url, headers = header)
             s = r.content
             df = pd.read_json(s)
             holder = df['results'][0]
             
-            # usage_url = holder['utilities_url'] + "1/usage/"
-            # url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
-
-            if(site == 1):
-                if date == "2020":
-                    start_time = "2020-06-05T00:00:00+00:00"
-                usage_url = holder['utilities_url'] + "1/usage/"
-                url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
-            elif(site == 2):
-                if date == "2022":
-                    start_time = "2022-09-21T00:00:00"
-                usage_url = holder['utilities_url'] + "1/usage/"
-                url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
+            usage_url = holder['utilities_url'] + "1/usage/"
+            url2 = usage_url + "?start_time=" + start_time + "&end_time=" + end_time
             
             r2 = requests.get(url=url2, headers = header)
             s2 = r2.content
@@ -4205,10 +4240,31 @@ def update_output_2(date_value, bttn1, bttn2, site):
             
             for index in range(0,len(df2['timestamp'])):
                 nth_day = convert_nth_day(df2['timestamp'][index])
-                if (div2==1):
-                    daily_usage[nth_day - 1]+=(df2['usage'][index])
-                else:
-                    daily_usage[nth_day - 1]+=((df2['usage'][index])/count)
+                take_away_usage[nth_day - 1]+=(df2['usage'][index])
+        
+        if(site == 1):
+            if date == "2020":
+                start_time = "2020-06-05T00:00:00+00:00"
+            total_url = "https://api.steama.co/sites/26385/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Mthembanji"
+        elif(site == 2):
+            if date == "2022":
+                start_time = "2022-09-21T00:00:00"
+            total_url = "https://api.steama.co/sites/26678/utilities/1/usage/?start_time=" + start_time + "&end_time=" + end_time
+            site_name = "Kudembe"
+
+        r3 = requests.get(url = total_url, headers = header)
+        s3 = r3.content
+        df3 = pd.read_json(s3)
+            
+        for index in range(0,len(df3['timestamp'])):
+                        total_daily_usage[index]+=(df3['usage'][index])
+                        
+        for index in range(0,len(df2['timestamp'])):
+            if (div2==1):
+                daily_usage[index]=total_daily_usage[index] - take_away_usage[index]
+            else:
+                daily_usage[index]=(total_daily_usage[index] - take_away_usage[index])/count
 
     else:
 
